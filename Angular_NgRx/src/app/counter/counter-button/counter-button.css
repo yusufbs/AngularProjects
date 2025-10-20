@@ -1,0 +1,22 @@
+/* **  counter-button.component.css  ** */
+
+.app-counter-buttons {
+  margin-top: 20px;
+}
+.btn {
+  border: none;
+  padding: 10px 30px;
+  margin: 0px 2px;
+}
+.btn-increment {
+  background-color: #76008e;
+  color: white;
+}
+.btn-decrement {
+  background-color: #ff0090;
+  color: white;
+}
+.btn-reset {
+  background-color: #28282b;
+  color: white;
+}
