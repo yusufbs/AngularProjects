@@ -4,6 +4,7 @@ import {
   createReducer,
   createSelector,
   on,
+  props,
 } from '@ngrx/store';
 
 // counter.state.ts
@@ -11,10 +12,12 @@ import {
 
 export interface CounterState {
   counter: number;
+  toggle: boolean;
 }
 
 const initialCounterState: CounterState = {
   counter: 0,
+  toggle: false,
 };
 
 // counter.actions.ts
@@ -22,6 +25,8 @@ const initialCounterState: CounterState = {
 export const increment = createAction('increament');
 export const decrement = createAction('decrement');
 export const reset = createAction('reset');
+export const customIncrement = createAction('customIncrement', props<{ value: number }>());
+export const toggleCustomInput = createAction('toggleCustomInput');
 
 // counter.reducer.ts
 // Reducer Function
@@ -32,15 +37,27 @@ export const counterReducer = createReducer(
   // Handle Decrement Action
   on(decrement, (state) => ({ ...state, counter: state.counter - 1 })),
   // Handle Reset Action
-  on(reset, (state) => ({ ...state, counter: 0 }))
+  on(reset, (state) => ({ ...state, counter: 0 })),
+  // Handle Custom Increment Action
+  on(customIncrement, (state, action) => ({
+    ...state,
+    counter: state.counter + action.value,
+  })),
+  // Handle Toggle Custom Input Action
+  on(toggleCustomInput, (state) => ({ ...state, toggle: !state.toggle }))
 );
 
 //counter.selectors.ts
 // Selector Functions
 
-const selectCounterState = createFeatureSelector<CounterState>('counter');
+const getCounterState = createFeatureSelector<CounterState>('counter');
 
 export const getCounter = createSelector(
-  selectCounterState,
+  getCounterState,
   (counterState: CounterState) => counterState.counter
+);
+
+export const getToggle = createSelector(
+  getCounterState,
+  (counterState: CounterState) => counterState.toggle
 );

@@ -1,0 +1,38 @@
+/* **  counter-input.component.css  ** */
+
+.app-custom-value {
+  margin: 15px 0px;
+  padding: 10px 2px;
+  width: 100%;
+  border-top: #cdcdcd 1.5px solid;
+}
+
+.toggle-btn-container {
+  padding: 4px 10px;
+  text-align: right;
+  background-color: #76008e;
+}
+.toggle-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+.custom-input-container {
+  padding: 20px 30px;
+  border: #cdcdcd 1.5px solid;
+}
+.app-custom-value input {
+  width: 70%;
+  height: 35px;
+  border: #e74c3c 1.5px solid;
+  background-color: transparent;
+}
+.btn-increment-by {
+  width: 30%;
+  height: 35px;
+  border: none;
+  background-color: #e74c3c;
+  color: white;
+}
