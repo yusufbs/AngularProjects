@@ -1,0 +1,36 @@
+/* ** course.component.css ** */
+.course-container {
+  padding: 10px 20px;
+}
+
+.courses-page-header {
+  padding: 15px 0px;
+  border-bottom: #cdcdcd 1.5px solid;
+  display: flex;
+}
+.course-header-text {
+  width: 30%;
+}
+.course-header-search {
+  width: 70%;
+  text-align: right;
+}
+.course-header-search input {
+  width: 220px;
+  height: 35px;
+  border: #cdcdcd 1.5px solid;
+  padding-left: 15px;
+  font-style: italic;
+}
+.course-header-search button {
+  padding: 9px 30px;
+  border: none;
+  background-color: #ff0090;
+  color: white;
+}
+.course-list-container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
