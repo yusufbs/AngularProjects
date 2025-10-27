@@ -1,0 +1,57 @@
+<div id="myModal" class="overlay">
+  <div class="modal-content" id="modal-content">
+    <span class="close" (click)="hideCreateForm()">&times;</span>
+    <div class="form-container">
+      <h2>{{ editMode ? 'Update Course' : 'Create New Course' }}</h2>
+      <form class="course-form" [formGroup]="courseForm" (ngSubmit)="onCreateCourse()">
+        <div class="form-field">
+          <label for="title">Title</label>
+          <input
+            type="text"
+            placeholder="e.g., Introduction to Web Development"
+            formControlName="title"
+          />
+        </div>
+        <div class="validation-error">{{ showTitleValidationErrors() }}</div>
+
+        <div class="form-field">
+          <label for="description">Description</label>
+          <textarea
+            rows="5"
+            placeholder="Provide a detailed description of the course"
+            formControlName="description"
+          ></textarea>
+        </div>
+        <div class="validation-error">{{ showDescriptionValidationErrors() }}</div>
+
+        <div class="form-field">
+          <label for="author">Author</label>
+          <input type="text" placeholder="e.g., John Doe" formControlName="author" />
+        </div>
+        <div class="validation-error">{{ showAuthorValidationErrors() }}</div>
+
+        <div class="form-field">
+          <label for="price">Price</label>
+          <input type="number" step="0.01" placeholder="e.g., 99.99" formControlName="price" />
+        </div>
+
+        <!-- <div class="form-field file-upload-field">
+          <label for="image">Course Image</label>
+          <div class="file-input-wrapper">
+            <input type="file" accept="image/*" formControlName="image" />
+            <button type="button" class="browse-button">Browse File</button>
+            <span class="file-name">No file chosen</span>
+          </div>
+        </div> -->
+
+        <div class="form-actions">
+          <button type="submit" class="submit-button">
+            <!-- {{ editMode ? 'Update Course' : 'Create Course' }} -->
+            @if(editMode) {Update Course} @else {Create Course}
+          </button>
+          @if(!editMode) {<button type="reset" class="cancel-button">Clear Form</button>}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

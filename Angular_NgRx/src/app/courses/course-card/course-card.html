@@ -1,26 +1,23 @@
 <div class="course-card">
   <div class="course-title">
-    <h3>Complete JavaScript Course</h3>
+    <h3>{{ course?.title }}</h3>
   </div>
   <div class="course-image">
-    <img src="/images/javascript.jpg" width="360px" height="200px" />
+    <img [src]="course?.image" width="360px" height="200px" />
   </div>
   <div class="course-description">
     <h5>About this course</h5>
     <div class="course-description-text">
-      <p>
-        This beginner Angular course covers core concepts like components, data binding, and routing
-        to build dynamic web apps...
-      </p>
+      <p>{{ course?.description?.substring(0, 120) }}...</p>
     </div>
   </div>
   <div class="course-card-footer">
-    <div class="course-price">$299</div>
+    <div class="course-price">${{ course?.price }}</div>
     <div class="course-actions">
       <button class="btn-action course-view">
         <i class="fa fa-info" aria-hidden="true"></i>
       </button>
-      <button class="btn-action course-edit">
+      <button class="btn-action course-edit" (click)="onCourseEdit()">
         <i class="fa fa-pencil" aria-hidden="true"></i>
       </button>
       <button class="btn-action course-delete">

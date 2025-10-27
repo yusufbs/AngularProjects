@@ -7,7 +7,17 @@
       <input type="text" placeholder="Search Course" />
       <button>Search</button>
     </div>
+    <div class="course-create">
+      <button class="create-course-button" (click)="showCreateForm()">Create Course</button>
+    </div>
   </div>
 
-  <div class="course-list-container"><app-course-card></app-course-card>></div>
+  <div class="course-list-container">
+    @for (course of courses$ | async ; track $index) {
+    <app-course-card [course]="course"></app-course-card> }
+  </div>
 </div>
+
+@if(showForm$ | async) {
+<app-add-course></app-add-course>
+}
