@@ -3,7 +3,7 @@
     <span class="close" (click)="hideCreateForm()">&times;</span>
     <div class="form-container">
       <h2>{{ editMode ? 'Update Course' : 'Create New Course' }}</h2>
-      <form class="course-form" [formGroup]="courseForm" (ngSubmit)="onCreateCourse()">
+      <form class="course-form" [formGroup]="courseForm" (ngSubmit)="onCreateOrUpdateCourse()">
         <div class="form-field">
           <label for="title">Title</label>
           <input

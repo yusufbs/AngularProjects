@@ -5,15 +5,17 @@ import {
   createCourseAction,
   getEditModeSelector,
   getSelectedCourseSelector,
+  setEditModeAction,
+  setSelectedCourseAction,
   showFormAction,
+  updateCourseAction,
 } from '../state/courses.state';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
 import { Course } from '../../model/course.model';
 
 @Component({
   selector: 'app-add-course',
-  imports: [ReactiveFormsModule, AsyncPipe],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-course.html',
   styleUrl: './add-course.css',
 })
@@ -68,12 +70,25 @@ export class AddCourse implements OnInit {
     this.store.dispatch(showFormAction({ value: false }));
   }
 
-  onCreateCourse() {
+  onCreateOrUpdateCourse() {
     if (!this.courseForm.valid) {
       return;
     }
-    this.store.dispatch(createCourseAction({ course: this.courseForm.value }));
+    if (this.editMode) {
+      // Update course logic here
+      const updatedCourse: Course = {
+        ...this.courseForm.value,
+        id: this.course?.id!,
+      };
+      this.store.dispatch(updateCourseAction({ course: updatedCourse }));
+    } else {
+      // Create course logic here
+      this.store.dispatch(createCourseAction({ course: this.courseForm.value }));
+    }
+
     this.hideCreateForm();
+    this.store.dispatch(setEditModeAction({ editMode: false }));
+    this.store.dispatch(setSelectedCourseAction({ course: {} as Course }));
   }
 
   showTitleValidationErrors() {

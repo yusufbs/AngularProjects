@@ -58,6 +58,14 @@ export const setSelectedCourseAction = createAction(
   '[Courses] Set Selected Course',
   props<{ course: Course }>()
 );
+export const updateCourseAction = createAction(
+  '[Courses] Update Course',
+  props<{ course: Course }>()
+);
+export const deleteCourseAction = createAction(
+  '[Courses] Delete Course',
+  props<{ courseId: number }>()
+);
 
 //courses.reducer.ts
 export const coursesReducer = createReducer(
@@ -81,7 +89,17 @@ export const coursesReducer = createReducer(
   on(setSelectedCourseAction, (state, action) => ({
     ...state,
     selectedCourse: action.course,
-  }))
+  })),
+  on(updateCourseAction, (state, action) => {
+    const updatedCourses = state.courses.map((course) =>
+      course.id === action.course.id ? action.course : course
+    );
+    return { ...state, courses: updatedCourses };
+  }),
+  on(deleteCourseAction, (state, action) => {
+    const filteredCourses = state.courses.filter((course) => course.id !== action.courseId);
+    return { ...state, courses: filteredCourses };
+  })
 );
 
 //courses.selectors.ts
