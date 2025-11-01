@@ -7,6 +7,7 @@ import {
   props,
 } from '@ngrx/store';
 import { Course } from '../../model/course.model';
+import { COURSES_STATE } from '../../constants';
 
 //courses.state.ts
 export interface CoursesState {
@@ -103,7 +104,7 @@ export const coursesReducer = createReducer(
 );
 
 //courses.selectors.ts
-const getCoursesState = createFeatureSelector<CoursesState>('courses');
+const getCoursesState = createFeatureSelector<CoursesState>(COURSES_STATE);
 
 export const getcoursesSelector = createSelector(getCoursesState, (state) => state.courses);
 export const showFormSelector = createSelector(getCoursesState, (state) => state.showForm);

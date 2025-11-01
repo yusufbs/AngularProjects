@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
 import {
@@ -12,6 +12,7 @@ import {
 } from '../state/courses.state';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Course } from '../../model/course.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-course',
@@ -19,19 +20,27 @@ import { Course } from '../../model/course.model';
   templateUrl: './add-course.html',
   styleUrl: './add-course.css',
 })
-export class AddCourse implements OnInit {
+export class AddCourse implements OnInit, OnDestroy {
   courseForm!: FormGroup;
   editMode: boolean = false;
   course!: Course | undefined;
 
+  editModeSubscription: Subscription | undefined;
+  selectedCourseSubscription: Subscription | undefined;
+
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.store.select(getEditModeSelector).subscribe((mode) => {
+    this.editModeSubscription = this.store.select(getEditModeSelector).subscribe((mode) => {
       this.editMode = mode;
     });
     this.init();
     this.subscribeToSelectedCourse();
+  }
+
+  ngOnDestroy(): void {
+    this.editModeSubscription?.unsubscribe();
+    this.selectedCourseSubscription?.unsubscribe();
   }
 
   init() {
@@ -56,9 +65,11 @@ export class AddCourse implements OnInit {
 
   subscribeToSelectedCourse() {
     // Subscribe to selected course from the store if needed
-    this.store.select(getSelectedCourseSelector).subscribe((data) => {
-      this.course = data;
-    });
+    this.selectedCourseSubscription = this.store
+      .select(getSelectedCourseSelector)
+      .subscribe((data) => {
+        this.course = data;
+      });
     if (this.editMode && this.course) {
       this.courseForm.patchValue(this.course);
     } else {

@@ -6,6 +6,7 @@ import {
   on,
   props,
 } from '@ngrx/store';
+import { COUNTER_STATE } from '../../constants';
 
 // counter.state.ts
 // Initial State
@@ -22,11 +23,14 @@ const initialCounterState: CounterState = {
 
 // counter.actions.ts
 // Action Types
-export const increment = createAction('increament');
-export const decrement = createAction('decrement');
-export const reset = createAction('reset');
-export const customIncrement = createAction('customIncrement', props<{ value: number }>());
-export const toggleCustomInput = createAction('toggleCustomInput');
+export const increment = createAction('[counter] Increament');
+export const decrement = createAction('[counter] Decrement');
+export const reset = createAction('[counter] Reset');
+export const customIncrement = createAction(
+  '[counter] Custom Increment',
+  props<{ value: number }>()
+);
+export const toggleCustomInput = createAction('[counter] Toggle Custom Input');
 
 // counter.reducer.ts
 // Reducer Function
@@ -50,7 +54,7 @@ export const counterReducer = createReducer(
 //counter.selectors.ts
 // Selector Functions
 
-const getCounterState = createFeatureSelector<CounterState>('counter');
+const getCounterState = createFeatureSelector<CounterState>(COUNTER_STATE);
 
 export const getCounter = createSelector(
   getCounterState,
