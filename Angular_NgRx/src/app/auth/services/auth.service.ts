@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { FIREBASE_API_KEY } from '../../constants';
 import { User } from '../../model/user.model';
 import { environment } from '../../../environments/environment.development';
 

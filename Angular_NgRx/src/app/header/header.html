@@ -8,8 +8,12 @@
     <a routerLink="courses" routerLinkActive="active">Courses</a>
   </div>
   <div class="header-auth-links">
+    @if ((loggedUser$ | async)) {
+    <a href="#">{{ (loggedUser$ | async)?.email }}</a>
+    <button class="logout-button">LOGOUT</button>
+    } @else {
     <a routerLink="auth/login">Login</a>
     <a routerLink="auth/signup">Signup</a>
-    <button class="logout-button">LOGOUT</button>
+    }
   </div>
 </div>
