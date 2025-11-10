@@ -1,0 +1,43 @@
+/* **  toaster.component.css  ** */
+
+.toast {
+  position: fixed; /* Stays in place when scrolling */
+  top: 80px; /* Position from the top of the viewport */
+  left: 50%;
+  transform: translateX(-50%); /* Centers the toast horizontally */
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Ensures the toast is above other content */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+  width: fit-content; /* Adjust width based on content */
+  max-width: 90%; /* Prevent it from being too wide on small screens */
+}
+
+/* Error specific styling */
+.toast.error {
+  background-color: #dc3545; /* Red background for errors */
+  color: white; /* White text color */
+  border: 1px solid #c82333; /* Slightly darker red border */
+}
+
+/* Optional: Add an error icon */
+.toast.error::before {
+  content: '✖'; /* Unicode character for a cross/error */
+  font-size: 1.2em;
+  color: white;
+  font-weight: bold;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  text-align: center;
+  border: white 1px solid;
+}
+
+.toast p {
+  margin: 0; /* Remove default paragraph margin */
+  font-size: 1em;
+  line-height: 1.4;
+}

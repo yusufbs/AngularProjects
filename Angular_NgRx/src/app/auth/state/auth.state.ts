@@ -12,10 +12,10 @@ import { AUTH_STATE } from '../../constants';
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
-import { exhaustMap, map, tap } from 'rxjs';
+import { catchError, exhaustMap, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AppState } from '../../store/app.state';
-import { setIsLoading } from '../../shared/shared.state';
+import { setErrorMessage, setIsLoading } from '../../shared/shared.state';
 
 // auth.state.ts
 export interface AuthState {
@@ -58,11 +58,16 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(loginStartAction),
       exhaustMap(({ email, password }) => {
-        this.store.dispatch(setIsLoading({ isLoading: true }));
+        this.store.dispatch(setIsLoading({ value: true }));
         return this.authService.login(email, password).pipe(
           map((user) => {
-            this.store.dispatch(setIsLoading({ isLoading: false }));
+            this.store.dispatch(setIsLoading({ value: false }));
             return loginSuccessAction({ user });
+          }),
+          catchError((error) => {
+            this.store.dispatch(setIsLoading({ value: false }));
+            const errorMessage = this.authService.getErrorMessage(error);
+            return of(setErrorMessage({ message: errorMessage }));
           })
         );
       })

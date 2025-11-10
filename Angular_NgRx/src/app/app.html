@@ -1,7 +1,8 @@
 @if( showLoading$| async) {
 <app-loader></app-loader>
+} @if( errorMessage$| async) {
+<app-toaster [errorMessage]="errorMessage$ | async"></app-toaster>
 }
-
 <div class="app-container">
   <app-header></app-header>
   <div>
