@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { customIncrement, getToggle, toggleCustomInput } from '../states/counter.state';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AppState } from '../../store/app.state';
+import { getToggle } from '../states/counter.selectors';
+import { customIncrement, toggleCustomInput } from '../states/counter.actions';
 
 @Component({
   selector: 'app-counter-input',

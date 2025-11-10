@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { provideState } from '@ngrx/store';
-import { counterReducer } from './counter/states/counter.state';
 import { coursesReducer } from './courses/state/courses.state';
 import { AUTH_STATE, COUNTER_STATE, COURSES_STATE } from './constants';
 import { AuthEffects, authReducer } from './auth/state/auth.state';
 import { provideEffects } from '@ngrx/effects';
+import { counterReducer } from './counter/states/counter.reducer';
 
 export const routes: Routes = [
   { path: '', component: Home },

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { getCounter } from '../states/counter.state';
 import { AsyncPipe } from '@angular/common';
 import { AppState } from '../../store/app.state';
+import { getCounter } from '../states/counter.selectors';
 
 @Component({
   selector: 'app-counter-value',
