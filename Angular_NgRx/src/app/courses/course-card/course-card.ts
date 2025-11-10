@@ -3,11 +3,11 @@ import { Course } from '../../model/course.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
 import {
-  deleteCourseAction,
+  showFormAction,
   setEditModeAction,
   setSelectedCourseAction,
-  showFormAction,
-} from '../state/courses.state';
+  deleteCourseAction,
+} from '../state/courses.actions';
 
 @Component({
   selector: 'app-course-card',

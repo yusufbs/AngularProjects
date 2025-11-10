@@ -1,18 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
-import {
-  createCourseAction,
-  getEditModeSelector,
-  getSelectedCourseSelector,
-  setEditModeAction,
-  setSelectedCourseAction,
-  showFormAction,
-  updateCourseAction,
-} from '../state/courses.state';
+
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Course } from '../../model/course.model';
 import { Subscription } from 'rxjs';
+import {
+  showFormAction,
+  updateCourseAction,
+  createCourseAction,
+  setEditModeAction,
+  setSelectedCourseAction,
+} from '../state/courses.actions';
+import { getEditModeSelector, getSelectedCourseSelector } from '../state/courses.selectors';
 
 @Component({
   selector: 'app-add-course',

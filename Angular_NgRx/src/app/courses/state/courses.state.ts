@@ -1,15 +1,5 @@
-import {
-  createAction,
-  createFeatureSelector,
-  createReducer,
-  createSelector,
-  on,
-  props,
-} from '@ngrx/store';
 import { Course } from '../../model/course.model';
-import { COURSES_STATE } from '../../constants';
 
-//courses.state.ts
 export interface CoursesState {
   courses: Course[];
   showForm: boolean;
@@ -43,73 +33,3 @@ export const initialCoursesState: CoursesState = {
   isEditMode: false,
   selectedCourse: undefined,
 };
-
-//courses.actions.ts
-export const getCoursesAction = createAction('[Courses] Get Courses');
-export const showFormAction = createAction('[Courses] Show Form', props<{ value: boolean }>());
-export const createCourseAction = createAction(
-  '[Courses] Create Course',
-  props<{ course: Course }>()
-);
-export const setEditModeAction = createAction(
-  '[Courses] Set Edit Mode',
-  props<{ editMode: boolean }>()
-);
-export const setSelectedCourseAction = createAction(
-  '[Courses] Set Selected Course',
-  props<{ course: Course }>()
-);
-export const updateCourseAction = createAction(
-  '[Courses] Update Course',
-  props<{ course: Course }>()
-);
-export const deleteCourseAction = createAction(
-  '[Courses] Delete Course',
-  props<{ courseId: number }>()
-);
-
-//courses.reducer.ts
-export const coursesReducer = createReducer(
-  initialCoursesState,
-  on(showFormAction, (state, action) => ({
-    ...state,
-    showForm: action.value,
-  })),
-  on(createCourseAction, (state, action) => {
-    const course = { ...action.course, id: state.courses.length + 1 };
-
-    return {
-      ...state,
-      courses: [...state.courses, course],
-    };
-  }),
-  on(setEditModeAction, (state, action) => ({
-    ...state,
-    isEditMode: action.editMode,
-  })),
-  on(setSelectedCourseAction, (state, action) => ({
-    ...state,
-    selectedCourse: action.course,
-  })),
-  on(updateCourseAction, (state, action) => {
-    const updatedCourses = state.courses.map((course) =>
-      course.id === action.course.id ? action.course : course
-    );
-    return { ...state, courses: updatedCourses };
-  }),
-  on(deleteCourseAction, (state, action) => {
-    const filteredCourses = state.courses.filter((course) => course.id !== action.courseId);
-    return { ...state, courses: filteredCourses };
-  })
-);
-
-//courses.selectors.ts
-const getCoursesState = createFeatureSelector<CoursesState>(COURSES_STATE);
-
-export const getcoursesSelector = createSelector(getCoursesState, (state) => state.courses);
-export const showFormSelector = createSelector(getCoursesState, (state) => state.showForm);
-export const getEditModeSelector = createSelector(getCoursesState, (state) => state.isEditMode);
-export const getSelectedCourseSelector = createSelector(
-  getCoursesState,
-  (state) => state.selectedCourse
-);

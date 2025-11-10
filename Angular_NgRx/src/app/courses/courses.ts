@@ -3,15 +3,11 @@ import { CourseCard } from './course-card/course-card';
 import { Course } from '../model/course.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../store/app.state';
-import {
-  getcoursesSelector,
-  setEditModeAction,
-  showFormAction,
-  showFormSelector,
-} from './state/courses.state';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AddCourse } from './add-course/add-course';
+import { getcoursesSelector, showFormSelector } from './state/courses.selectors';
+import { showFormAction, setEditModeAction } from './state/courses.actions';
 
 @Component({
   selector: 'app-courses',
