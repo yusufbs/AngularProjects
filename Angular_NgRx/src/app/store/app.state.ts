@@ -1,4 +1,5 @@
-import { authReducer, AuthState } from '../auth/state/auth.state';
+import { authReducer } from '../auth/state/auth.reducer';
+import { AuthState } from '../auth/state/auth.state';
 import { counterReducer } from '../counter/states/counter.reducer';
 import { CounterState } from '../counter/states/counter.state';
 import { coursesReducer } from '../courses/state/courses.reducer';

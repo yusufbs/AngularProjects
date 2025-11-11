@@ -4,8 +4,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../store/app.state';
 import { Observable } from 'rxjs';
 import { User } from '../model/user.model';
-import { getLoggedInUser } from '../auth/state/auth.state';
+
 import { AsyncPipe } from '@angular/common';
+import { getLoggedInUser } from '../auth/state/auth.selectors';
 
 @Component({
   selector: 'app-header',

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '../../model/user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
-import { loginStartAction } from '../state/auth.state';
+import { loginStartAction } from '../state/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -11,31 +11,19 @@ import { loginStartAction } from '../state/auth.state';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login implements OnInit {
+export class Login {
   loginForm: FormGroup;
   loggedInUser: User | null = null;
 
   constructor(private store: Store<AppState>) {
     this.loginForm = new FormGroup({
-      // Define your form controls here
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required]),
     });
   }
 
-  ngOnInit() {}
-
   onLogin() {
     const { email, password } = this.loginForm.value;
-    // this.authService.login(email, password).subscribe(
-    //   (response) => {
-    //     this.loggedInUser = response;
-    //     console.log('Login successful', response);
-    //   },
-    //   (error) => {
-    //     console.error('Login failed', error);
-    //   }
-    // );
     this.store.dispatch(loginStartAction({ email, password }));
   }
 

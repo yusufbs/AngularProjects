@@ -10,7 +10,13 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string) {
-    const url = `${environment.FireBase.url}?key=${environment.FireBase.apiKey}`;
+    const url = `${environment.FireBase.loginUrl}?key=${environment.FireBase.apiKey}`;
+    const body = { email, password, returnSecureToken: true };
+    return this.http.post<User>(url, body);
+  }
+
+  signup(email: string, password: string) {
+    const url = `${environment.FireBase.signupUrl}?key=${environment.FireBase.apiKey}`;
     const body = { email, password, returnSecureToken: true };
     return this.http.post<User>(url, body);
   }
@@ -35,6 +41,17 @@ export class AuthService {
       case 'USER_DISABLED':
         message = 'This user has been disabled.';
         break;
+      case 'EMAIL_EXISTS':
+        message = 'The email address is already in use by another account.';
+        break;
+      case 'OPERATION_NOT_ALLOWED':
+        message = 'Password sign-in is disabled for this project.';
+        break;
+      case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+        message =
+          'We have blocked all requests from this device due to unusual activity. Try again later.';
+        break;
+
       default:
         message = errorResponse.error.error.message;
         break;

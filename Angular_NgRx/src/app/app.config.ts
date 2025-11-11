@@ -11,8 +11,9 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideHttpClient } from '@angular/common/http';
 import { provideEffects } from '@ngrx/effects';
-import { authReducer } from './auth/state/auth.state';
+
 import { sharedReducer } from './shared/shared.state';
+import { authReducer } from './auth/state/auth.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
