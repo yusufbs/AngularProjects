@@ -6,7 +6,12 @@ import { exhaustMap, map, catchError, of, tap } from 'rxjs';
 import { setIsLoading, setErrorMessage } from '../../shared/shared.state';
 import { AppState } from '../../store/app.state';
 import { AuthService } from '../services/auth.service';
-import { loginStartAction, loginSuccessAction } from './auth.actions';
+import {
+  loginStartAction,
+  loginSuccessAction,
+  signupStartAction,
+  signupSuccessAction,
+} from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -21,9 +26,11 @@ export class AuthEffects {
       exhaustMap(({ email, password }) => {
         this.store.dispatch(setIsLoading({ value: true }));
         return this.authService.login(email, password).pipe(
-          map((user) => {
+          map((data) => {
             this.store.dispatch(setIsLoading({ value: false }));
-            return loginSuccessAction({ user });
+            const loggedUser = this.authService.formatUserData(data);
+            this.authService.saveUserToLocalStorage(loggedUser);
+            return loginSuccessAction({ user: loggedUser });
           }),
           catchError((error) => {
             this.store.dispatch(setIsLoading({ value: false }));
@@ -35,10 +42,32 @@ export class AuthEffects {
     );
   });
 
-  loginRedirect$ = createEffect(
+  signup$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(signupStartAction),
+      exhaustMap((action) => {
+        this.store.dispatch(setIsLoading({ value: true }));
+        return this.authService.signup(action.email, action.password).pipe(
+          map((data) => {
+            this.store.dispatch(setIsLoading({ value: false }));
+            const SignupUser = this.authService.formatUserData(data);
+            this.authService.saveUserToLocalStorage(SignupUser);
+            return signupSuccessAction({ user: SignupUser });
+          }),
+          catchError((error) => {
+            this.store.dispatch(setIsLoading({ value: false }));
+            const errorMessage = this.authService.getErrorMessage(error);
+            return of(setErrorMessage({ message: errorMessage }));
+          })
+        );
+      })
+    );
+  });
+
+  redirect$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(loginSuccessAction),
+        ofType(...[loginSuccessAction, signupSuccessAction]),
         tap(() => {
           this.router.navigate(['/']);
         })

@@ -2,6 +2,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../../model/user.model';
 import { environment } from '../../../environments/environment.development';
+import { AuthResponse } from '../../model/auth-response.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,16 +11,16 @@ import { environment } from '../../../environments/environment.development';
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<AuthResponse> {
     const url = `${environment.FireBase.loginUrl}?key=${environment.FireBase.apiKey}`;
     const body = { email, password, returnSecureToken: true };
-    return this.http.post<User>(url, body);
+    return this.http.post<AuthResponse>(url, body);
   }
 
-  signup(email: string, password: string) {
+  signup(email: string, password: string): Observable<AuthResponse> {
     const url = `${environment.FireBase.signupUrl}?key=${environment.FireBase.apiKey}`;
     const body = { email, password, returnSecureToken: true };
-    return this.http.post<User>(url, body);
+    return this.http.post<AuthResponse>(url, body);
   }
 
   getErrorMessage(errorResponse: HttpErrorResponse) {
@@ -58,5 +60,26 @@ export class AuthService {
     }
 
     return message;
+  }
+
+  formatUserData(authResponse: AuthResponse): User {
+    const expiresAt = new Date().getTime() + +authResponse.expiresIn * 1000;
+
+    const formattedUser: User = {
+      accessToken: authResponse.idToken,
+      email: authResponse.email,
+      expiresAt: expiresAt,
+      userId: authResponse.localId,
+    };
+
+    return formattedUser;
+  }
+
+  saveUserToLocalStorage(user: User) {
+    try {
+      localStorage.setItem('userData', JSON.stringify(user));
+    } catch (e) {
+      console.error('Error saving user data to localStorage', e);
+    }
   }
 }
