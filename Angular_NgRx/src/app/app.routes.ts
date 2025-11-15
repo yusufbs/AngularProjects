@@ -25,6 +25,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.routes').then((m) => m.routes),
-    providers: [provideState(AUTH_STATE, authReducer), provideEffects([AuthEffects])],
+    // providers: [provideState(AUTH_STATE, authReducer), provideEffects([AuthEffects])],
+    providers: [provideState(AUTH_STATE, authReducer)],
   },
 ];

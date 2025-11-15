@@ -10,7 +10,7 @@
   <div class="header-auth-links">
     @if ((loggedUser$ | async)) {
     <a href="#">{{ (loggedUser$ | async)?.email }}</a>
-    <button class="logout-button">LOGOUT</button>
+    <button class="logout-button" (click)="onLogoutClicked()">LOGOUT</button>
     } @else {
     <a routerLink="auth/login">Login</a>
     <a routerLink="auth/signup">Signup</a>

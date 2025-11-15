@@ -7,6 +7,7 @@ import { User } from '../model/user.model';
 
 import { AsyncPipe } from '@angular/common';
 import { getLoggedInUser } from '../auth/state/auth.selectors';
+import { logoutAction } from '../auth/state/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -21,5 +22,9 @@ export class Header implements OnInit {
 
   ngOnInit() {
     this.loggedUser$ = this.store.select(getLoggedInUser);
+  }
+
+  onLogoutClicked() {
+    this.store.dispatch(logoutAction());
   }
 }

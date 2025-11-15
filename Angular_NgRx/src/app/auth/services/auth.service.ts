@@ -82,4 +82,30 @@ export class AuthService {
       console.error('Error saving user data to localStorage', e);
     }
   }
+
+  readUserFromLocalStoreage() {
+    try {
+      const loggedUser = localStorage.getItem('userData');
+
+      if (!loggedUser) {
+        return null;
+      }
+
+      const user = JSON.parse(loggedUser);
+
+      if (user.expiresAt <= new Date().getTime()) {
+        localStorage.removeItem('userData');
+        return null;
+      }
+
+      return user;
+    } catch (e) {
+      localStorage.removeItem('userData');
+      return null;
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('userData');
+  }
 }

@@ -2,13 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { exhaustMap, map, catchError, of, tap } from 'rxjs';
+import { exhaustMap, map, catchError, of, tap, mergeMap } from 'rxjs';
 import { setIsLoading, setErrorMessage } from '../../shared/shared.state';
 import { AppState } from '../../store/app.state';
 import { AuthService } from '../services/auth.service';
 import {
+  autoLoginAction,
   loginStartAction,
   loginSuccessAction,
+  logoutAction,
   signupStartAction,
   signupSuccessAction,
 } from './auth.actions';
@@ -70,6 +72,29 @@ export class AuthEffects {
         ofType(...[loginSuccessAction, signupSuccessAction]),
         tap(() => {
           this.router.navigate(['/']);
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  autoLogin$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(autoLoginAction),
+      mergeMap(() => {
+        const user = this.authService.readUserFromLocalStoreage();
+        return of(loginSuccessAction({ user }));
+      })
+    );
+  });
+
+  logout$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(logoutAction),
+        map(() => {
+          this.authService.logout();
+          this.router.navigate(['auth', 'login']);
         })
       );
     },

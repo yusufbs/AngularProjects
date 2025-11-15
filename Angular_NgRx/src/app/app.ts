@@ -8,6 +8,7 @@ import { getErrorMessage, getIsLoading } from './shared/shared.state';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { Toaster } from './toaster/toaster';
+import { autoLoginAction } from './auth/state/auth.actions';
 
 @Component({
   selector: 'app-root',
@@ -24,5 +25,6 @@ export class App {
   constructor() {
     this.showLoading$ = this.store.select(getIsLoading);
     this.errorMessage$ = this.store.select(getErrorMessage);
+    this.store.dispatch(autoLoginAction());
   }
 }

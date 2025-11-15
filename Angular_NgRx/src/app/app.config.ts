@@ -14,6 +14,7 @@ import { provideEffects } from '@ngrx/effects';
 
 import { sharedReducer } from './shared/shared.state';
 import { authReducer } from './auth/state/auth.reducer';
+import { AuthEffects } from './auth/state/auth.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +24,6 @@ export const appConfig: ApplicationConfig = {
     provideStore({ auth: authReducer, shared: sharedReducer }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideHttpClient(),
-    provideEffects(),
+    provideEffects([AuthEffects]),
   ],
 };

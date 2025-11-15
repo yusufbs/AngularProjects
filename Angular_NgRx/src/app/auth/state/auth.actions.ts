@@ -14,3 +14,7 @@ export const signupStartAction = createAction(
 );
 
 export const signupSuccessAction = createAction('[Auth] Signup Success', props<{ user: User }>());
+
+export const autoLoginAction = createAction('[Auth] Auto Login');
+
+export const logoutAction = createAction('[Auth] Logout');
