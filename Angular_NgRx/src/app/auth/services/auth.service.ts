@@ -4,12 +4,17 @@ import { User } from '../../model/user.model';
 import { environment } from '../../../environments/environment.development';
 import { AuthResponse } from '../../model/auth-response.model';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app.state';
+import { logoutAction } from '../state/auth.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private store: Store<AppState>) {}
+
+  timer: any;
 
   login(email: string, password: string): Observable<AuthResponse> {
     const url = `${environment.FireBase.loginUrl}?key=${environment.FireBase.apiKey}`;
@@ -78,6 +83,7 @@ export class AuthService {
   saveUserToLocalStorage(user: User) {
     try {
       localStorage.setItem('userData', JSON.stringify(user));
+      this.autoLogoutUser(user);
     } catch (e) {
       console.error('Error saving user data to localStorage', e);
     }
@@ -107,5 +113,17 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('userData');
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
+
+  autoLogoutUser(user: User) {
+    const interval = user.expiresAt - Date.now();
+
+    this.timer = setTimeout(() => {
+      this.store.dispatch(logoutAction());
+    }, interval);
   }
 }

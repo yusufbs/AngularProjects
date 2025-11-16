@@ -6,14 +6,20 @@ export const loginStartAction = createAction(
   props<{ email: string; password: string }>()
 );
 
-export const loginSuccessAction = createAction('[Auth] Login Success', props<{ user: User }>());
+export const loginSuccessAction = createAction(
+  '[Auth] Login Success',
+  props<{ user: User; redirect: boolean }>()
+);
 
 export const signupStartAction = createAction(
   '[Auth] Signup Start',
   props<{ email: string; password: string }>()
 );
 
-export const signupSuccessAction = createAction('[Auth] Signup Success', props<{ user: User }>());
+export const signupSuccessAction = createAction(
+  '[Auth] Signup Success',
+  props<{ user: User; redirect: boolean }>()
+);
 
 export const autoLoginAction = createAction('[Auth] Auto Login');
 
