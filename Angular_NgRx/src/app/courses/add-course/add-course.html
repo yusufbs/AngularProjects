@@ -35,14 +35,16 @@
           <input type="number" step="0.01" placeholder="e.g., 99.99" formControlName="price" />
         </div>
 
-        <!-- <div class="form-field file-upload-field">
+        <div class="form-field file-upload-field">
           <label for="image">Course Image</label>
           <div class="file-input-wrapper">
-            <input type="file" accept="image/*" formControlName="image" />
-            <button type="button" class="browse-button">Browse File</button>
+            <input type="file" accept="image/*" (change)="onFileSelected($event)" #selectFile />
+            <button type="button" class="browse-button" (click)="selectFile.click()">
+              Browse File
+            </button>
             <span class="file-name">No file chosen</span>
           </div>
-        </div> -->
+        </div>
 
         <div class="form-actions">
           <button type="submit" class="submit-button">

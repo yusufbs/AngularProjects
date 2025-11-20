@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.state';
 
@@ -13,6 +13,8 @@ import {
   setSelectedCourseAction,
 } from '../state/courses.actions';
 import { getEditModeSelector, getSelectedCourseSelector } from '../state/courses.selectors';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { CourseService } from '../services/course.service';
 
 @Component({
   selector: 'app-add-course',
@@ -24,11 +26,14 @@ export class AddCourse implements OnInit, OnDestroy {
   courseForm!: FormGroup;
   editMode: boolean = false;
   course!: Course | undefined;
+  selectedImageFile: File | null = null;
 
   editModeSubscription: Subscription | undefined;
   selectedCourseSubscription: Subscription | undefined;
 
-  constructor(private store: Store<AppState>) {}
+  private store: Store<AppState> = inject(Store<AppState>);
+  private courseService: CourseService = inject(CourseService);
+
 
   ngOnInit(): void {
     this.editModeSubscription = this.store.select(getEditModeSelector).subscribe((mode) => {
@@ -44,9 +49,7 @@ export class AddCourse implements OnInit, OnDestroy {
   }
 
   init() {
-    // Initialize the form here if needed
     this.courseForm = new FormGroup({
-      // Define form controls here
       title: new FormControl(null, [
         Validators.required,
         Validators.minLength(6),
@@ -59,7 +62,7 @@ export class AddCourse implements OnInit, OnDestroy {
       ]),
       author: new FormControl(null, [Validators.required]),
       price: new FormControl(null),
-      // image: new FormControl(null),
+      image: new FormControl(null),
     });
   }
 
@@ -81,19 +84,19 @@ export class AddCourse implements OnInit, OnDestroy {
     this.store.dispatch(showFormAction({ value: false }));
   }
 
-  onCreateOrUpdateCourse() {
+  async onCreateOrUpdateCourse() {
     if (!this.courseForm.valid) {
       return;
     }
     if (this.editMode) {
-      // Update course logic here
       const updatedCourse: Course = {
         ...this.courseForm.value,
         id: this.course?.id!,
       };
       this.store.dispatch(updateCourseAction({ course: updatedCourse }));
     } else {
-      // Create course logic here
+      const url = await this.courseService.uploadImage(this.selectedImageFile!);
+      this.courseForm.patchValue({ image: url });
       this.store.dispatch(createCourseAction({ course: this.courseForm.value }));
     }
 
@@ -142,5 +145,16 @@ export class AddCourse implements OnInit, OnDestroy {
       }
     }
     return null;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImageFile = file;
+      const fileNameSpan = document.querySelector('.file-name');
+      if (fileNameSpan) {
+        fileNameSpan.textContent = file.name;
+      }
+    }
   }
 }

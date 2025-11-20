@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../../model/user.model';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { AuthResponse } from '../../model/auth-response.model';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';

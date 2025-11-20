@@ -16,7 +16,7 @@ export const coursesReducer = createReducer(
     showForm: action.value,
   })),
   on(createCourseAction, (state, action) => {
-    const course = { ...action.course, id: state.courses.length + 1 };
+    const course = { ...action.course, id: (state.courses.length + 1).toString() };
 
     return {
       ...state,

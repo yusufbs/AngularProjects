@@ -21,5 +21,5 @@ export const updateCourseAction = createAction(
 );
 export const deleteCourseAction = createAction(
   '[Courses] Delete Course',
-  props<{ courseId: number }>()
+  props<{ courseId: string }>()
 );

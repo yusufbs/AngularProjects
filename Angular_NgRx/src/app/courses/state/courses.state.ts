@@ -10,7 +10,7 @@ export interface CoursesState {
 export const initialCoursesState: CoursesState = {
   courses: [
     {
-      id: 1,
+      id: '1',
       title: 'Mastering Modern JavaScript',
       description:
         'A comprehensive course covering ES6+ features, asynchronous JavaScript, and front-end development essentials.',
@@ -20,7 +20,7 @@ export const initialCoursesState: CoursesState = {
     },
 
     {
-      id: 2,
+      id: '2',
       title: 'Angular - From Zero to Hero',
       description:
         'Learn to build robust and scalable single-page applications with Angular, including components, services, routing, and state management.',
