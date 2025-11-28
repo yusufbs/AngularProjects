@@ -7,7 +7,11 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { AddCourse } from './add-course/add-course';
 import { getcoursesSelector, showFormSelector } from './state/courses.selectors';
-import { showFormAction, setEditModeAction } from './state/courses.actions';
+import {
+  showFormAction,
+  setEditModeAction,
+  readCoursesAction,
+} from './state/courses.actions';
 
 @Component({
   selector: 'app-courses',
@@ -24,6 +28,7 @@ export class Courses implements OnInit {
   ngOnInit(): void {
     this.courses$ = this.store.select(getcoursesSelector);
     this.showForm$ = this.store.select(showFormSelector);
+    this.store.dispatch(readCoursesAction());
   }
 
   showCreateForm() {

@@ -34,7 +34,6 @@ export class AddCourse implements OnInit, OnDestroy {
   private store: Store<AppState> = inject(Store<AppState>);
   private courseService: CourseService = inject(CourseService);
 
-
   ngOnInit(): void {
     this.editModeSubscription = this.store.select(getEditModeSelector).subscribe((mode) => {
       this.editMode = mode;
@@ -89,6 +88,9 @@ export class AddCourse implements OnInit, OnDestroy {
       return;
     }
     if (this.editMode) {
+      const url = await this.courseService.uploadImage(this.selectedImageFile!);
+      const imagePath = url ? url : this.courseForm.value.image;
+      this.courseForm.patchValue({ image: imagePath });
       const updatedCourse: Course = {
         ...this.courseForm.value,
         id: this.course?.id!,

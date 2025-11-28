@@ -2,11 +2,12 @@ import { createReducer, on } from '@ngrx/store';
 import { initialCoursesState } from './courses.state';
 import {
   showFormAction,
-  createCourseAction,
   setEditModeAction,
   setSelectedCourseAction,
-  updateCourseAction,
   deleteCourseAction,
+  createCourseSuccessAction,
+  readCoursesSuccessAction,
+  updateCourseSuccessAction,
 } from './courses.actions';
 
 export const coursesReducer = createReducer(
@@ -15,13 +16,14 @@ export const coursesReducer = createReducer(
     ...state,
     showForm: action.value,
   })),
-  on(createCourseAction, (state, action) => {
-    const course = { ...action.course, id: (state.courses.length + 1).toString() };
-
+  on(createCourseSuccessAction, (state, action) => {
     return {
       ...state,
-      courses: [...state.courses, course],
+      courses: [...state.courses, action.course],
     };
+  }),
+  on(readCoursesSuccessAction, (state, action) => {
+    return { ...state, courses: action.courses };
   }),
   on(setEditModeAction, (state, action) => ({
     ...state,
@@ -31,7 +33,7 @@ export const coursesReducer = createReducer(
     ...state,
     selectedCourse: action.course,
   })),
-  on(updateCourseAction, (state, action) => {
+  on(updateCourseSuccessAction, (state, action) => {
     const updatedCourses = state.courses.map((course) =>
       course.id === action.course.id ? action.course : course
     );
