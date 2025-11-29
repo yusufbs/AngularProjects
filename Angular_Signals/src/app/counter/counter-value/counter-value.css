@@ -1,0 +1,10 @@
+/* **  counter-value.component.css  ** */
+
+.app-counter-value {
+  font-size: 75px;
+  font-family: 'consolas';
+  font-weight: bold;
+  text-align: center;
+  padding: 30px 20px;
+  border-bottom: #cdcdcd 1.5px solid;
+}

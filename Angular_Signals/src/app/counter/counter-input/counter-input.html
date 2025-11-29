@@ -1,0 +1,14 @@
+<div class="app-custom-value">
+  <div class="toggle-btn-container">
+    <button class="toggle-btn" (click)="onToggleClicked()">
+      {{ showCustomInput() ? '-' : '+' }}
+    </button>
+  </div>
+
+  @if ((showCustomInput() )) {
+  <div class="custom-input-container">
+    <input type="text" [(ngModel)]="customValue" />
+    <button class="btn-increment-by" (click)="onCustomValueButtonClicked()">Increment By</button>
+  </div>
+  }
+</div>

@@ -1,0 +1,38 @@
+/* **  header.component.css  ** */
+
+.header {
+  background-color: #76008e; /*#ff0090*/
+  color: white;
+  display: flex;
+}
+.header-logo {
+  width: 20%;
+  padding: 10px 50px;
+}
+.header-links {
+  width: 50%;
+  text-align: center;
+  padding: 15px 0px;
+}
+.header-auth-links {
+  width: 30%;
+  text-align: right;
+  padding: 10px 20px;
+}
+.logout-button {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 2px;
+  background-color: #ff0090;
+  color: white;
+}
+a {
+  text-decoration: none;
+  color: white;
+  margin-right: 10px;
+  font-size: 18px;
+}
+.active {
+  padding-bottom: 3px;
+  border-bottom: 3px #ff0090 solid;
+}
