@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CounterService } from '../services/counter-service';
+import { CounterService } from '../services/counter.service';
 
 @Component({
   selector: 'app-counter-button',

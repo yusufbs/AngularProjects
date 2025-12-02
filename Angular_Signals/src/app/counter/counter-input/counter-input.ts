@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CounterService } from '../services/counter-service';
+import { CounterService } from '../services/counter.service';
 
 @Component({
   selector: 'app-counter-input',

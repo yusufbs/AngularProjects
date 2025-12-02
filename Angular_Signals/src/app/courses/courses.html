@@ -1,0 +1,23 @@
+<div class="course-container">
+  <div class="courses-page-header">
+    <div class="course-header-text">
+      <h2>All Courses</h2>
+    </div>
+    <div class="course-header-search">
+      <input type="text" placeholder="Search Course" />
+      <button>Search</button>
+    </div>
+    <div class="course-create">
+      <button class="create-course-button" (click)="showCreateForm()">Create Course</button>
+    </div>
+  </div>
+
+  <div class="course-list-container">
+    @for (course of courses() ; track $index) {
+    <app-course-card [course]="course"></app-course-card> }
+  </div>
+</div>
+
+@if(showForm()) {
+<app-add-course></app-add-course>
+}

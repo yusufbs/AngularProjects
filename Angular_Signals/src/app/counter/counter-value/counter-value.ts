@@ -1,4 +1,4 @@
-import { CounterService } from './../services/counter-service';
+import { CounterService } from '../services/counter.service';
 import { Component, inject, OnInit, signal } from '@angular/core';
 
 @Component({
