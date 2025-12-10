@@ -1,0 +1,195 @@
+/* footer.component.css */
+
+/* Footer container styling */
+footer.container {
+  background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+  color: #ecf0f1;
+  padding: 3rem 1rem;
+  margin-top: auto;
+  border-top: 4px solid #3498db;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Background decorative element */
+footer.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #3498db, transparent);
+}
+
+/* Paragraph styling */
+footer.container p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Float-right link styling */
+.float-right {
+  display: inline-block;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.float-right a {
+  color: #ecf0f1;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background-color: rgba(52, 152, 219, 0.2);
+  border-radius: 20px;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.float-right a:hover {
+  color: #3498db;
+  background-color: rgba(52, 152, 219, 0.3);
+  border-color: #3498db;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+  text-decoration: none;
+}
+
+/* Main copyright and link styling */
+footer.container p:nth-of-type(2) {
+  font-size: 0.95rem;
+  color: #bdc3c7;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+footer.container a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  padding: 0 2px;
+  transition: all 0.3s ease;
+}
+
+footer.container a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #2ecc71;
+  transition: width 0.3s ease;
+}
+
+footer.container a:hover {
+  color: #2ecc71;
+  text-decoration: none;
+}
+
+footer.container a:hover::after {
+  width: 100%;
+}
+
+/* Middle dot separator */
+.middot {
+  display: inline-block;
+  margin: 0 10px;
+  color: #7f8c8d;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  footer.container {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .float-right {
+    float: none !important;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  footer.container p {
+    font-size: 0.9rem;
+  }
+
+  footer.container p:nth-of-type(2) {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
+/* Small screens */
+@media (max-width: 576px) {
+  footer.container {
+    padding: 1.5rem 0.5rem;
+  }
+
+  .float-right a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  footer.container p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Animation for footer appearance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+footer.container {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Hover effect for the entire footer */
+footer.container:hover {
+  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Print styles */
+@media print {
+  footer.container {
+    border-top: 1px solid #ccc;
+    background: white;
+    color: black;
+    box-shadow: none;
+  }
+
+  footer.container a {
+    color: #2c3e50;
+  }
+
+  .float-right a {
+    border: 1px solid #ccc;
+    color: #333;
+  }
+}
+
+/* Accessibility focus styles */
+footer.container a:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+  border-radius: 2px;
+}

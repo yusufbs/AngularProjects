@@ -1,0 +1,204 @@
+/* header.component.css */
+
+/* Custom navbar styling */
+.navbar.bg-dark {
+  background-color: #2c3e50 !important; /* Dark blue instead of pure black */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 1rem;
+}
+
+/* Brand styling */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+  color: #ecf0f1 !important;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #3498db !important;
+  transform: scale(1.02);
+}
+
+/* Nav items styling */
+.navbar-nav .nav-item {
+  margin: 0 5px;
+}
+
+.navbar-nav .nav-link {
+  color: #ecf0f1 !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navbar-nav .nav-link:hover:not(.disabled) {
+  color: #3498db !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link.active {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: #3498db !important;
+}
+
+.navbar-nav .nav-link.disabled {
+  color: #7f8c8d !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Dropdown styling */
+.nav-item.dropdown .nav-link.dropdown-toggle {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dropdown-menu {
+  background-color: #34495e;
+  border: 1px solid #2c3e50;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  color: #ecf0f1;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #3498db;
+  color: white;
+  transform: translateX(5px);
+}
+
+/* Search form styling */
+.form-inline {
+  margin-right: 1rem;
+  padding-left: 10px;
+}
+
+.form-control.mr-sm-2 {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 20px;
+  padding: 0.375rem 1rem;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.form-control.mr-sm-2:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+  color: white;
+}
+
+.form-control.mr-sm-2::placeholder {
+  color: #bdc3c7;
+}
+
+.btn-outline-success {
+  color: #2ecc71;
+  border-color: #2ecc71;
+  border-radius: 20px;
+  padding: 0.375rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-success:hover {
+  background-color: #2ecc71;
+  border-color: #2ecc71;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Sign-in/Sign-out section */
+.navbar-nav.ml-auto {
+  margin-left: auto;
+}
+
+.navbar-nav.ml-auto .nav-link {
+  border: 1px solid transparent;
+  margin: 0 3px;
+}
+
+.navbar-nav.ml-auto .nav-link:hover {
+  border: 1px solid rgba(52, 152, 219, 0.5);
+}
+
+/* Pointer cursor for clickable elements */
+.sim-pointer {
+  cursor: pointer;
+}
+
+/* Mobile responsiveness enhancements */
+@media (max-width: 992px) {
+  .navbar-nav .nav-item {
+    margin: 5px 0;
+  }
+
+  .form-inline {
+    margin: 10px 0;
+    width: 100%;
+    display: flex;
+  }
+
+  .form-control.mr-sm-2 {
+    flex-grow: 1;
+    margin-right: 10px !important;
+  }
+
+  .btn-outline-success {
+    flex-shrink: 0;
+  }
+
+  .navbar-nav.ml-auto {
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 10px;
+  }
+}
+
+/* Animation for navbar toggler */
+.navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.5rem;
+}
+
+.navbar-toggler:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
+}
+
+/* Active state for dropdown items */
+.dropdown-item:active {
+  background-color: #2980b9;
+}
+
+/* Special styling for role-based menu items */
+.nav-item .nav-link[routerLink] {
+  position: relative;
+}
+
+.nav-item .nav-link[routerLink]:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #3498db;
+  transition: all 0.3s ease;
+}
+
+.nav-item .nav-link[routerLink]:hover:after {
+  width: 80%;
+  left: 10%;
+}
