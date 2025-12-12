@@ -1,0 +1,49 @@
+<div class="navigation-container">
+  <h3 class="navigation-title">All Application Routes</h3>
+
+  <div class="routes-list">
+    @if (allRoutes.length === 0) {
+    <p class="no-routes">No routes found</p>
+    } @else {
+    <ul class="routes-ul">
+      @for (route of allRoutes; track route.fullPath; let i = $index) {
+      <li class="route-item">
+        <a
+          [routerLink]="route.fullPath"
+          class="route-link"
+          routerLinkActive="active-route"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span class="route-number">{{ i + 1 }}.</span>
+          <span class="route-name">{{ getRouteTitle(route) }}</span>
+          <span class="route-path">{{ route.fullPath }}</span>
+        </a>
+
+        @if (route.children && route.children.length > 0) {
+        <div class="nested-routes">
+          <span class="nested-label">Nested Routes:</span>
+          <ul class="nested-ul">
+            @for (child of route.children; track child.path) {
+            <li class="nested-item">
+              <a
+                [routerLink]="route.fullPath + '/' + child.path"
+                class="nested-link"
+                routerLinkActive="active-route"
+              >
+                {{ child.path }}
+              </a>
+            </li>
+            }
+          </ul>
+        </div>
+        }
+      </li>
+      }
+    </ul>
+    }
+  </div>
+
+  <div class="routes-summary">
+    <p>Total Routes: {{ allRoutes.length }}</p>
+  </div>
+</div>
