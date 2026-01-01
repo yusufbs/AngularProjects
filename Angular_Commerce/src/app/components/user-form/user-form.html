@@ -1,0 +1,10 @@
+<form [formGroup]="dForm" (ngSubmit)="submitForm()">
+  @for (item of formData()?.form?.controls; track $index) {
+  <div class="form-group">
+    <label>{{ item.text }}</label>
+    <input [id]="item.name" [formControlName]="item.name" [type]="item.type" />
+  </div>
+  }
+
+  <button type="submit">Submit</button>
+</form>

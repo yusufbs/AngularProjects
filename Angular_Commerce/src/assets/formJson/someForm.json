@@ -1,0 +1,97 @@
+{
+  "form": {
+    "group": "userProfileForm",
+    "submit": "updateProfile",
+    "controls": [
+      {
+        "name": "name",
+        "text": "Name",
+        "type": "text",
+        "validators": [{ "type": "required", "message": "Name is required" }]
+      },
+      {
+        "name": "mobNumber",
+        "text": "Mobile Number",
+        "type": "tel",
+        "validators": [{ "type": "required", "message": "Mobile number is required" }]
+      },
+      {
+        "name": "age",
+        "text": "Enter your age",
+        "type": "number",
+        "validators": [{ "type": "required", "message": "Age is required" }]
+      },
+      {
+        "name": "dob",
+        "text": "Enter your DOB",
+        "type": "date",
+        "validators": [{ "type": "required", "message": "Date of birth is required" }]
+      },
+      {
+        "name": "email",
+        "text": "Email",
+        "type": "email",
+        "validators": [
+          { "type": "required", "message": "Email is required" },
+          { "type": "email", "message": "Enter valid email" }
+        ]
+      },
+      {
+        "name": "password",
+        "text": "Password",
+        "type": "password",
+        "validators": [
+          { "type": "required", "message": "Password is required" },
+          {
+            "type": "minlength",
+            "message": "Name must be at least 6 characters",
+            "options": { "length": 6 }
+          }
+        ]
+      },
+      {
+        "name": "addline1",
+        "text": "Address",
+        "type": "text",
+        "validators": [{ "type": "required", "message": "Address Line 1 is required" }]
+      },
+      {
+        "name": "addline2",
+        "text": "Address 2",
+        "type": "text",
+        "placeholder": "Apartment, suite, unit etc. (optional)"
+      },
+      {
+        "name": "city",
+        "text": "City",
+        "type": "text",
+        "validators": [{ "type": "required", "message": "City is required" }]
+      },
+      {
+        "name": "state",
+        "text": "State",
+        "type": "select",
+        "validators": [{ "type": "required", "message": "Select one option" }]
+      },
+      {
+        "name": "zipCode",
+        "text": "Zip",
+        "type": "text",
+        "validators": [{ "type": "required", "message": "Zip Code is required" }]
+      },
+      {
+        "name": "gender",
+        "text": "Zip",
+        "type": "radio",
+        "options": [{ "value": "Male" }, { "value": "Female" }]
+      },
+      {
+        "name": "aboutYou",
+        "text": "Something about you",
+        "type": "textarea",
+        "options": [{ "rows": 3, "cols": 25 }],
+        "validators": [{ "type": "required", "message": "Write something about you" }]
+      }
+    ]
+  }
+}

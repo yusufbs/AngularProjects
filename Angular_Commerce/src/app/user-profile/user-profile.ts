@@ -5,10 +5,13 @@ import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { User } from '../core/models/object-model';
+import { ApiService } from '../core/services/api.service';
+import { UserForm } from '../components/user-form/user-form';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, UserForm],
+  providers: [UserService, ApiService],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.css',
 })
