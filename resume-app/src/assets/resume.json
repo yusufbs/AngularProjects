@@ -1,0 +1,197 @@
+{
+  "personalInfo": {
+    "name": "Alexandra Reyes",
+    "title": "Senior Full-Stack Engineer",
+    "email": "alex.reyes@email.com",
+    "phone": "+1 (555) 842-9301",
+    "location": "San Francisco, CA",
+    "linkedin": "linkedin.com/in/alexreyes",
+    "github": "github.com/alexreyes",
+    "website": "alexreyes.dev",
+    "photo": ""
+  },
+  "summary": "Results-driven full-stack engineer with 9+ years designing and shipping production software at scale. Deep expertise in distributed systems, cloud-native architectures, and leading cross-functional teams. Passionate about developer experience, clean APIs, and building products that people actually love to use.",
+  "technicalSkills": {
+    "Languages": ["TypeScript", "Python", "Go", "Rust", "SQL", "Bash"],
+    "Frontend": ["Angular", "React", "Next.js", "RxJS", "Tailwind CSS", "WebGL"],
+    "Backend": ["Node.js", "FastAPI", "gRPC", "GraphQL", "REST", "WebSockets"],
+    "Cloud & DevOps": ["AWS", "GCP", "Kubernetes", "Terraform", "Docker", "GitHub Actions"],
+    "Databases": ["PostgreSQL", "Redis", "MongoDB", "Cassandra", "Elasticsearch"],
+    "Tools": ["Git", "Figma", "Datadog", "Sentry", "Jira", "Linear"]
+  },
+  "coreCompetencies": [
+    "Distributed Systems Design",
+    "Technical Leadership",
+    "API Architecture",
+    "Performance Optimization",
+    "Agile / Scrum",
+    "CI/CD Pipelines",
+    "Code Review & Mentorship",
+    "Product Thinking",
+    "Security Best Practices",
+    "Cross-Team Collaboration"
+  ],
+  "professionalExperience": [
+    {
+      "company": "Stripe",
+      "role": "Staff Software Engineer",
+      "location": "San Francisco, CA",
+      "startDate": "Jan 2021",
+      "endDate": "Present",
+      "highlights": [
+        "Architected and led development of a new event-driven payment processing pipeline handling 40M+ transactions/day with 99.999% uptime.",
+        "Reduced API latency by 38% through query optimization, connection pooling, and strategic caching with Redis.",
+        "Mentored a team of 6 engineers, conducting weekly 1:1s and establishing code quality standards that cut bug rates by 22%.",
+        "Drove adoption of internal design system used by 200+ engineers across 12 product teams."
+      ]
+    },
+    {
+      "company": "Airbnb",
+      "role": "Senior Software Engineer",
+      "location": "San Francisco, CA",
+      "startDate": "Mar 2018",
+      "endDate": "Dec 2020",
+      "highlights": [
+        "Built real-time availability and pricing engine serving 8M+ requests per day across 190+ countries.",
+        "Led migration of monolithic search service to microservices, reducing deployment time from 45 minutes to under 4 minutes.",
+        "Collaborated with design and PM to ship host dashboard v2, increasing host engagement by 31%.",
+        "Championed accessibility improvements (WCAG 2.1 AA) across 14 core user flows."
+      ]
+    },
+    {
+      "company": "Palantir Technologies",
+      "role": "Software Engineer",
+      "location": "New York, NY",
+      "startDate": "Jun 2015",
+      "endDate": "Feb 2018",
+      "highlights": [
+        "Developed data visualization tools for government and healthcare clients processing petabyte-scale datasets.",
+        "Built secure ETL pipelines for sensitive data ingestion meeting HIPAA and FedRAMP compliance requirements.",
+        "Contributed to open-source internal tooling, gaining 1.2k GitHub stars."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Carnegie Mellon University",
+      "degree": "M.S. Computer Science",
+      "focus": "Machine Learning",
+      "graduationYear": "2015",
+      "gpa": "3.92"
+    },
+    {
+      "institution": "University of Michigan",
+      "degree": "B.S. Computer Science",
+      "focus": "Systems",
+      "graduationYear": "2013",
+      "gpa": "3.87",
+      "honors": "Magna Cum Laude"
+    }
+  ],
+  "achievements": [
+    {
+      "title": "Stripe Hackathon Winner",
+      "year": "2023",
+      "description": "First place for building an AI-powered fraud detection prototype that reduced false positives by 41%."
+    },
+    {
+      "title": "ACM ICPC Regional Finalist",
+      "year": "2012",
+      "description": "Top 5 finish at ACM International Collegiate Programming Contest, Great Lakes Regional."
+    },
+    {
+      "title": "Open Source Contributor",
+      "year": "2019–Present",
+      "description": "Active contributor to Angular and TypeScript ecosystems; 3.4k GitHub stars across personal projects."
+    },
+    {
+      "title": "Published Author",
+      "year": "2022",
+      "description": "Co-authored 'Scaling Payments Infrastructure' in IEEE Software magazine, vol. 39."
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Solutions Architect – Professional",
+      "issuer": "Amazon Web Services",
+      "year": "2022",
+      "credentialId": "AWS-SAP-39471"
+    },
+    {
+      "name": "Certified Kubernetes Administrator (CKA)",
+      "issuer": "Cloud Native Computing Foundation",
+      "year": "2021",
+      "credentialId": "CKA-2021-08812"
+    },
+    {
+      "name": "Google Cloud Professional Data Engineer",
+      "issuer": "Google",
+      "year": "2020",
+      "credentialId": "GCP-PDE-77203"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Helix — API Gateway Framework",
+      "url": "github.com/alexreyes/helix",
+      "tech": ["Go", "gRPC", "Kubernetes"],
+      "description": "Open-source API gateway with built-in rate limiting, auth, and observability. 2.1k stars, used in production by 30+ startups."
+    },
+    {
+      "name": "Prism — Design Token CLI",
+      "url": "github.com/alexreyes/prism",
+      "tech": ["TypeScript", "Node.js", "CSS"],
+      "description": "CLI tool for syncing Figma design tokens to code. Automates style generation for Angular, React, and Vue projects."
+    },
+    {
+      "name": "Pulsecheck — Uptime Monitor",
+      "url": "pulsecheck.io",
+      "tech": ["Next.js", "FastAPI", "PostgreSQL"],
+      "description": "SaaS uptime monitoring tool with Slack/PagerDuty integration. 400+ active users, profitable since month 3."
+    }
+  ],
+  "languages": [
+    { "language": "English", "proficiency": "Native" },
+    { "language": "Spanish", "proficiency": "Professional" },
+    { "language": "Mandarin Chinese", "proficiency": "Conversational" }
+  ],
+  "availability": {
+    "status": "Open to Opportunities",
+    "startDate": "2 weeks notice",
+    "preferredRoles": ["Staff Engineer", "Principal Engineer", "Engineering Lead"],
+    "workType": ["Full-time", "Remote", "Hybrid"],
+    "locations": ["San Francisco Bay Area", "New York City", "Remote (US)"],
+    "noticePeriod": "2 weeks"
+  },
+  "employmentGaps": [
+    {
+      "startDate": "Jan 2014",
+      "endDate": "May 2015",
+      "reason": "Graduate School",
+      "description": "Full-time M.S. program at Carnegie Mellon. Focused on machine learning research and published 2 conference papers."
+    }
+  ],
+  "references": [
+    {
+      "name": "David Park",
+      "title": "Engineering Director, Stripe",
+      "email": "david.park@stripe.com",
+      "phone": "+1 (555) 200-1122",
+      "relationship": "Direct Manager (2021–Present)"
+    },
+    {
+      "name": "Priya Sharma",
+      "title": "Principal Engineer, Airbnb",
+      "email": "priya.sharma@airbnb.com",
+      "phone": "+1 (555) 300-4411",
+      "relationship": "Senior Colleague (2018–2020)"
+    },
+    {
+      "name": "James O'Brien",
+      "title": "VP Engineering, Palantir",
+      "email": "jobrien@palantir.com",
+      "phone": "+1 (555) 400-9900",
+      "relationship": "Skip-Level Manager (2015–2018)"
+    }
+  ]
+}

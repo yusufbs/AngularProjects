@@ -1,0 +1,71 @@
+<!-- <router-outlet /> -->
+<!-- Top bar (mobile) -->
+<header class="topbar">
+  <button class="menu-btn" (click)="sidebarOpen = !sidebarOpen" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <span class="topbar-name">{{ resume?.personalInfo?.name ?? 'Resume' }}</span>
+  <span class="topbar-title">{{ resume?.personalInfo?.title ?? '' }}</span>
+</header>
+
+<!-- Sidebar overlay (mobile) -->
+@if (sidebarOpen) {
+  <div class="overlay" (click)="sidebarOpen = false"></div>
+}
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <span class="brand-label">Resume</span>
+    </div>
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.id) {
+        <a
+          class="nav-item"
+          [class.active]="activeSection === item.id"
+          (click)="scrollTo(item.id)"
+          href="javascript:void(0)"
+        >
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+    <div class="sidebar-footer">
+      <span>Angular 21</span>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main-content">
+    @if (loading) {
+      <div class="loader">
+        <div class="loader-ring"></div>
+        <p>Loading resume…</p>
+      </div>
+    } @else if (error) {
+      <div class="error-state">
+        <span class="error-icon">⚠</span>
+        <p>{{ error }}</p>
+      </div>
+    } @else if (resume) {
+      <div class="sections-stack">
+        <app-personal-info [data]="resume.personalInfo" />
+        <app-summary [data]="resume.summary" />
+        <app-technical-skills [data]="resume.technicalSkills" />
+        <app-core-competencies [data]="resume.coreCompetencies" />
+        <app-professional-experience [data]="resume.professionalExperience" />
+        <app-education [data]="resume.education" />
+        <app-achievements [data]="resume.achievements" />
+        <app-certifications [data]="resume.certifications" />
+        <app-projects [data]="resume.projects" />
+        <app-languages [data]="resume.languages" />
+        <app-availability [data]="resume.availability" />
+        <app-employment-gaps [data]="resume.employmentGaps" />
+        <app-references [data]="resume.references" />
+      </div>
+    }
+  </main>
+</div>
