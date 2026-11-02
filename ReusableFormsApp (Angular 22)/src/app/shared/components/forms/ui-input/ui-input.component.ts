@@ -334,10 +334,10 @@ export class UiInputComponent implements ControlValueAccessor, OnInit {
   disabled = input(false, { transform: booleanAttribute });
   prefixIcon = input<string>('');
   suffixIcon = input<string>('');
-  min = input<number | null>(null);
-  max = input<number | null>(null);
-  step = input<number | null>(null);
-  maxlength = input<number | null>(null);
+  min = input<number | string | null | undefined>(null);
+  max = input<number | string | null | undefined>(null);
+  step = input<number | string | null | undefined>(null);
+  maxlength = input<number | string | null | undefined>(null);
 
   // Internal state
   value = signal<any>('');
@@ -451,3 +451,4 @@ export class UiInputComponent implements ControlValueAccessor, OnInit {
     this.isPasswordVisible.update((v) => !v);
   }
 }
+

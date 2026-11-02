@@ -5,20 +5,11 @@ import {
   output,
   signal,
   computed,
-  inject,
   OnInit,
   OnChanges,
   SimpleChanges,
-  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-  ValidatorFn,
-} from '@angular/forms';
 import {
   DynamicFormField,
   DynamicFormSchema,
@@ -36,13 +27,25 @@ import { UiRadioGroupComponent } from '../ui-radio-group/ui-radio-group.componen
 import { UiSwitchComponent } from '../ui-switch/ui-switch.component';
 import { UiDatepickerComponent } from '../ui-datepicker/ui-datepicker.component';
 import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.component';
+import {
+  FormField,
+  form,
+  required,
+  email,
+  min,
+  max,
+  minLength,
+  maxLength,
+  pattern,
+  FieldTree,
+} from '@angular/forms/signals';
 
 @Component({
   selector: 'ui-dynamic-form',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    FormField,
     UiFormComponent,
     UiInputComponent,
     UiTextareaComponent,
@@ -56,7 +59,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (formGroup()) {
+    @if (formTree()) {
       <div class="ui-dynamic-form-wrap">
         @if (schema().title || schema().description) {
           <div class="ui-dynamic-header">
@@ -70,7 +73,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
         }
 
         <ui-form
-          [formGroup]="formGroup()!"
+          [form]="formTree()!"
           [submitText]="schema().submitText || 'Submit'"
           [showReset]="schema().showReset ?? true"
           [resetText]="schema().resetText || 'Reset'"
@@ -88,7 +91,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                   @switch (field.type) {
                     @case ('text') {
                       <ui-input
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         type="text"
                         [label]="field.label"
                         [placeholder]="field.placeholder || ''"
@@ -99,7 +102,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('email') {
                       <ui-input
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         type="email"
                         [label]="field.label"
                         [placeholder]="field.placeholder || ''"
@@ -110,7 +113,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('password') {
                       <ui-input
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         type="password"
                         [label]="field.label"
                         [placeholder]="field.placeholder || ''"
@@ -120,7 +123,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('number') {
                       <ui-input
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         type="number"
                         [label]="field.label"
                         [placeholder]="field.placeholder || ''"
@@ -132,7 +135,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('textarea') {
                       <ui-textarea
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [placeholder]="field.placeholder || ''"
                         [hint]="field.hint || ''"
@@ -143,7 +146,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('select') {
                       <ui-select
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [placeholder]="field.placeholder || 'Select an option...'"
                         [hint]="field.hint || ''"
@@ -155,7 +158,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('checkbox') {
                       <ui-checkbox
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [description]="field.placeholder || ''"
                         [hint]="field.hint || ''"
@@ -164,7 +167,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('checkbox-group') {
                       <ui-checkbox-group
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [hint]="field.hint || ''"
                         [options]="asCheckboxOptions(field.options)"
@@ -173,7 +176,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('radio') {
                       <ui-radio-group
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [hint]="field.hint || ''"
                         [options]="asRadioOptions(field.options)"
@@ -182,7 +185,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('switch') {
                       <ui-switch
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [description]="field.hint || ''"
                         [required]="!!field.validators?.required"
@@ -190,7 +193,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('date') {
                       <ui-datepicker
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [hint]="field.hint || ''"
                         [required]="!!field.validators?.required"
@@ -199,7 +202,7 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
                     }
                     @case ('file') {
                       <ui-file-upload
-                        [formControlName]="field.name"
+                        [formField]="asField(field.name)"
                         [label]="field.label"
                         [hint]="field.hint || ''"
                         [accept]="field.accept || '*'"
@@ -271,51 +274,32 @@ import { UiFileUploadComponent } from '../ui-file-upload/ui-file-upload.componen
   `],
 })
 export class UiDynamicFormComponent implements OnInit, OnChanges {
-  private fb = inject(FormBuilder);
-
   schema = input.required<DynamicFormSchema>();
   formSubmit = output<any>();
   formReset = output<void>();
 
-  formGroup = signal<FormGroup | null>(null);
-  currentValues = signal<Record<string, any>>({});
+  // Signal Forms State
+  modelSignal = signal<Record<string, any>>({});
+  formTree = signal<FieldTree<Record<string, any>> | any>(null);
 
   ngOnInit(): void {
-    this.buildForm();
+    this.buildSignalForm();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['schema'] && !changes['schema'].firstChange) {
-      this.buildForm();
+      this.buildSignalForm();
     }
   }
 
-  private buildForm(): void {
+  private buildSignalForm(): void {
     const s = this.schema();
     if (!s || !s.fields) return;
 
-    const groupConfig: Record<string, any> = {};
+    const initialModel: Record<string, any> = {};
 
     s.fields.forEach((field) => {
-      const validators: ValidatorFn[] = [];
-      const v = field.validators;
-      if (v) {
-        if (v.required) {
-          if (field.type === 'checkbox') {
-            validators.push(Validators.requiredTrue);
-          } else {
-            validators.push(Validators.required);
-          }
-        }
-        if (v.email || field.type === 'email') validators.push(Validators.email);
-        if (v.min !== undefined) validators.push(Validators.min(v.min));
-        if (v.max !== undefined) validators.push(Validators.max(v.max));
-        if (v.minLength !== undefined) validators.push(Validators.minLength(v.minLength));
-        if (v.maxLength !== undefined) validators.push(Validators.maxLength(v.maxLength));
-        if (v.pattern) validators.push(Validators.pattern(v.pattern));
-      }
-
-      const initialValue =
+      const defaultVal =
         field.defaultValue !== undefined
           ? field.defaultValue
           : field.type === 'checkbox'
@@ -323,23 +307,59 @@ export class UiDynamicFormComponent implements OnInit, OnChanges {
           : field.type === 'checkbox-group'
           ? []
           : '';
-
-      groupConfig[field.name] = [initialValue, validators];
+      initialModel[field.name] = defaultVal;
     });
 
-    const fg = this.fb.group(groupConfig);
-    this.formGroup.set(fg);
-    this.currentValues.set(fg.value);
+    this.modelSignal.set(initialModel);
 
-    fg.valueChanges.subscribe((val) => {
-      this.currentValues.set({ ...val });
+    // Build Signal Forms FieldTree with schema rules!
+    const dynamicTree = form(this.modelSignal, (schemaBuilder: any) => {
+      s.fields.forEach((field) => {
+        const fieldRef = schemaBuilder[field.name];
+        if (!fieldRef) return;
+
+        const v = field.validators;
+        if (v) {
+          if (v.required) {
+            required(fieldRef, { message: `${field.label} is required.` });
+          }
+          if (v.email || field.type === 'email') {
+            email(fieldRef, { message: 'Must be a valid email.' });
+          }
+          if (v.min !== undefined) {
+            min(fieldRef, v.min, { message: `Minimum value is ${v.min}.` });
+          }
+          if (v.max !== undefined) {
+            max(fieldRef, v.max, { message: `Maximum value is ${v.max}.` });
+          }
+          if (v.minLength !== undefined) {
+            minLength(fieldRef, v.minLength, { message: `At least ${v.minLength} characters.` });
+          }
+          if (v.maxLength !== undefined) {
+            maxLength(fieldRef, v.maxLength, { message: `At most ${v.maxLength} characters.` });
+          }
+          if (v.pattern) {
+            pattern(fieldRef, typeof v.pattern === 'string' ? new RegExp(v.pattern) : v.pattern, {
+              message: 'Invalid format.',
+            });
+          }
+        }
+      });
     });
+
+    this.formTree.set(dynamicTree);
+  }
+
+  asField(fieldName: string): any {
+    const tree: any = this.formTree();
+    return tree ? tree[fieldName] : null;
   }
 
   isFieldVisible(field: DynamicFormField): boolean {
     if (!field.dependsOn) return true;
     const dep = field.dependsOn;
-    const val = this.currentValues()[dep.field];
+    const currentModel = this.modelSignal();
+    const val = currentModel[dep.field];
 
     if (dep.operator === 'notEquals') {
       return val !== dep.value;
@@ -362,3 +382,4 @@ export class UiDynamicFormComponent implements OnInit, OnChanges {
     return (opts as UiCheckboxOption[]) || [];
   }
 }
+

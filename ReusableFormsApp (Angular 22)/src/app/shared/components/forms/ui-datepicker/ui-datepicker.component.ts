@@ -218,8 +218,8 @@ export class UiDatepickerComponent implements ControlValueAccessor {
   required = input(false, { transform: booleanAttribute });
   optional = input(false, { transform: booleanAttribute });
   disabled = input(false, { transform: booleanAttribute });
-  min = input<string | null>(null);
-  max = input<string | null>(null);
+  min = input<string | null | undefined>(null);
+  max = input<string | null | undefined>(null);
   quickPresets = input(false, { transform: booleanAttribute });
 
   value = signal<string>('');
@@ -306,3 +306,4 @@ export class UiDatepickerComponent implements ControlValueAccessor {
     this.onTouched();
   }
 }
+

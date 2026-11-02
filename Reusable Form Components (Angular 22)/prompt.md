@@ -1,4 +1,4 @@
-# Master Prompt: Production-Grade Reusable Form Component Suite (Angular 22+)
+# Master Prompt: Production-Grade Reusable Form Component Suite (Angular 22+ Signal Forms)
 
 ## Project Location
 The full runnable project and component library have been placed in:
@@ -13,60 +13,40 @@ Then open: `http://localhost:4200`
 
 ---
 
-> **System Role**: Act as a **Principal Frontend Architect and Staff Angular Engineer**. Your task is to design, generate, and implement a **complete, zero-dependency, production-grade reusable form component suite** using **Angular 22 or above**.
+> **System Role**: Act as a **Principal Frontend Architect and Staff Angular Engineer**. Your task is to design, generate, and implement a **complete, zero-dependency, production-grade reusable form component suite** using **Angular 22 or above** powered natively by **Signal Forms** (`@angular/forms/signals`).
 > 
 > The suite must package both the **form container itself** (`<ui-form>`) and **all primary form elements** (`<ui-input>`, `<ui-textarea>`, `<ui-select>`, `<ui-checkbox>`, `<ui-checkbox-group>`, `<ui-radio-group>`, `<ui-switch>`, `<ui-datepicker>`, `<ui-file-upload>`, `<ui-form-field>`, and `<ui-dynamic-form>`) into cleanly decoupled, accessible, and themeable standalone components that can be dropped into **any** modern Angular application.
 
 ---
 
-## 1. Architectural Foundations (Angular 22+ Standards)
+## 1. Architectural Foundations (Angular 22+ Signal Forms)
 
-Every component generated under this prompt must strictly adhere to modern Angular 22 conventions:
+Every component generated under this prompt must strictly adhere to Angular 22 Signal Forms conventions:
 
-1. **Standalone & Clean Imports**:
-   - Every component must be standalone.
-   - Use direct, minimal imports (`ReactiveFormsModule`, `FormsModule`, `CommonModule` or native control flow `@if`, `@for`, `@switch`).
-2. **Signal-First Reactivity**:
-   - Use `input()`, `input.required()`, and `model()` for component inputs.
-   - Use `output()` for custom event emitters.
-   - Use `computed()` for derived state (e.g. character counter, CSS classes, validation summaries).
+1. **Signal Forms Native**:
+   - Use `@angular/forms/signals` as the form foundation.
+   - Forms are created using `form(modelSignal, schemaFn)` which returns a `FieldTree`.
+   - Form fields bind directly in templates via the `[formField]` directive (`<ui-input [formField]="profileForm.email" />`).
+   - Eliminate legacy `FormGroup`, `FormControl`, and `FormBuilder` boilerplate. Forms bind directly to model signals (`model = signal({...})`).
+   - Submissions use the typed `submit(formTree, async () => { ... })` function which automatically handles validation, marks all fields as touched, and focuses the first invalid element on failure.
+2. **Signal-First Component Reactivity**:
+   - Component inputs must use `input()`, `input.required()`, and `model()`.
+   - Boolean attributes use `transform: booleanAttribute` for clean bare attribute support (`<ui-input clearable required>`).
+   - Component events use the `output()` API.
+   - Derived state uses `computed()`.
    - Fully compatible with Zoneless Change Detection (`provideExperimentalZonelessChangeDetection()`).
-3. **Seamless Form Integration (ControlValueAccessor & Reactive Forms)**:
-   - All input controls must implement `ControlValueAccessor` via `NG_VALUE_ACCESSOR` or inject `NgControl` (using `inject(NgControl, { optional: true, self: true })`).
-   - Must work interchangeably with:
-     - Reactive Forms (`[formControl]="ctrl"`, `formControlName="name"`)
-     - Template-driven forms (`[(ngModel)]="val"`)
-     - Direct two-way Signal bindings (`[(value)]="val"`)
+3. **Universal Control Binding & Compatibility**:
+   - Components work seamlessly with `[formField]="form.fieldName"`.
+   - Also support direct two-way Signal bindings (`[(value)]="sig"`) and template-driven `[(ngModel)]`.
 4. **WCAG 2.2 AA Accessibility**:
-   - Unique auto-generated or explicitly provided IDs linking `<label for="id">` to `<input id="...">`.
-   - `aria-describedby` referencing active error message or helper text.
-   - `aria-invalid="true"` dynamically assigned when the control is invalid and touched/dirty.
-   - `aria-required="true"` when marked as required.
-   - Full keyboard accessibility (Tab, Enter, Space, Arrow keys for radio groups and custom dropdowns).
+   - Auto-generated unique IDs linking `<label for="...">` to inputs.
+   - `aria-invalid` bound directly to field validity and touched/dirty state.
+   - `aria-describedby` referencing active error messages or hint text.
+   - Full keyboard navigation (Arrow keys for radio groups and custom dropdowns, Space/Enter for switches and file triggers).
    - High-contrast focus rings via `:focus-visible`.
-5. **Zero External CSS Framework Dependencies & Full Theming**:
-   - Self-contained, scoped styles using modern CSS custom properties (variables) with sensible, polished defaults:
-     ```css
-     :root {
-       --ui-form-primary: #4f46e5;
-       --ui-form-primary-hover: #4338ca;
-       --ui-form-primary-focus: rgba(79, 70, 229, 0.25);
-       --ui-form-border: #d1d5db;
-       --ui-form-border-hover: #9ca3af;
-       --ui-form-bg: #ffffff;
-       --ui-form-bg-disabled: #f3f4f6;
-       --ui-form-text: #111827;
-       --ui-form-text-muted: #6b7280;
-       --ui-form-error: #ef4444;
-       --ui-form-error-bg: #fef2f2;
-       --ui-form-error-border: #fca5a5;
-       --ui-form-success: #10b981;
-       --ui-form-radius: 8px;
-       --ui-form-font-family: inherit;
-       --ui-form-transition: 0.15s ease-in-out;
-     }
-     ```
-   - Automatically supports dark mode overrides via `[data-theme="dark"]` or media query `@media (prefers-color-scheme: dark)`.
+5. **Zero External CSS Framework Dependencies**:
+   - 100% scoped CSS powered by CSS Custom Properties (`--ui-form-primary`, `--ui-form-border`, `--ui-form-error`, etc.).
+   - Built-in Dark Mode support via `[data-theme="dark"]`.
 
 ---
 
@@ -74,258 +54,182 @@ Every component generated under this prompt must strictly adhere to modern Angul
 
 ### A. The Form Container (`UiFormComponent` / `<ui-form>`)
 - **Selector**: `ui-form`
-- **Role**: Reusable form wrapper handling submission lifecycle, reset, validation aggregation, and UX polish.
+- **Role**: Reusable form wrapper handling submission lifecycle, reset, validation aggregation, and UX polish for Signal Forms.
 - **Inputs**:
-  - `formGroup`: `input.required<FormGroup>()`
-  - `showErrorSummary`: `input<boolean>(false)` — whether to display an accessible alert banner listing invalid fields when submission fails.
+  - `form`: `input.required<FieldTree<any>>()` — the Signal Forms `FieldTree` instance.
+  - `showErrorSummary`: `input(true, { transform: booleanAttribute })` — displays an accessible alert banner listing invalid fields when submission fails.
   - `submitText`: `input<string>('Submit')`
-  - `showReset`: `input<boolean>(false)`
+  - `showReset`: `input(false, { transform: booleanAttribute })`
   - `resetText`: `input<string>('Reset')`
   - `layout`: `input<'stacked' | 'grid-2' | 'grid-3'>('stacked')`
-  - `loading`: `input<boolean>(false)`
+  - `loading`: `input(false, { transform: booleanAttribute })`
 - **Outputs**:
-  - `formSubmit`: `output<any>()` — emits the typed `formGroup.value` ONLY if form is valid.
+  - `formSubmit`: `output<any>()` — emits the typed value ONLY if form is valid.
   - `formReset`: `output<void>()`
-  - `invalidSubmit`: `output<ValidationErrors>()` — emits validation errors if user attempted submit while invalid.
+  - `invalidSubmit`: `output<any>()` — emits validation errors if user attempted submit while invalid.
 - **Key Behaviors**:
-  - Automatically runs `this.formGroup().markAllAsTouched()` upon submit attempt.
-  - Auto-scrolls to and focuses the first invalid form control.
-  - Provides a flexible `<ng-content></ng-content>` slot for form controls and an optional `<ng-content select="[actions]"></ng-content>` slot for custom action buttons.
+  - Uses `await submit(this.form(), async () => { this.formSubmit.emit(this.form()().value()); })`.
+  - Automatically scrolls to and focuses the first invalid form control.
 
 ---
 
 ### B. Form Field Wrapper (`UiFormFieldComponent` / `<ui-form-field>`)
 - **Selector**: `ui-form-field`
-- **Role**: Reusable layout primitive wrapping any input control with label, required star, helper text, and error messaging.
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `id`: `input<string>('')` (auto-generates unique ID if omitted)
-  - `required`: `input<boolean>(false)`
-  - `optional`: `input<boolean>(false)` — displays "(Optional)" badge
-  - `hint`: `input<string>('')` — contextual helper text
-  - `errorMessage`: `input<string>('')` — explicit error override
-  - `control`: `input<AbstractControl | null>(null)` — optional direct reference to control for automated error resolution
-- **Features**:
-  - Smooth animated entrance for validation errors.
-  - Prefix/Suffix template slots (`<ng-content select="[prefix]"></ng-content>`, `<ng-content select="[suffix]"></ng-content>`).
-  - Character counter display when paired with text inputs.
+- **Role**: Reusable layout primitive wrapping any input control with label, required asterisk, optional badge, helper text, and error messaging.
 
 ---
 
 ### C. Text & Numeric Input (`UiInputComponent` / `<ui-input>`)
 - **Selector**: `ui-input`
-- **Inputs**:
-  - `type`: `input<'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'>('text')`
-  - `label`: `input<string>('')`
-  - `placeholder`: `input<string>('')`
-  - `hint`: `input<string>('')`
-  - `clearable`: `input<boolean>(false)` — shows one-click clear button when text is present
-  - `showPasswordToggle`: `input<boolean>(true)` — for password inputs, renders a show/hide toggle icon
-  - `min`: `input<number | null>(null)`
-  - `max`: `input<number | null>(null)`
-  - `step`: `input<number | null>(null)`
-  - `maxlength`: `input<number | null>(null)`
-  - `readonly`: `input<boolean>(false)`
-  - `prefixIcon`: `input<string>('')`
-  - `suffixIcon`: `input<string>('')`
-- **Features**:
-  - Full `ControlValueAccessor` integration.
-  - Automatically extracts validation errors from bound `NgControl`.
-  - Floating label or standard top label mode.
+- **Inputs**: `type`, `label`, `placeholder`, `hint`, `clearable`, `showPasswordToggle`, `min`, `max`, `step`, `maxlength`, `readonly`, `disabled`, `prefixIcon`, `suffixIcon`.
+- **Signal Forms**: Binds with `[formField]="form.controlName"`.
 
 ---
 
 ### D. Multi-line Textarea (`UiTextareaComponent` / `<ui-textarea>`)
 - **Selector**: `ui-textarea`
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `placeholder`: `input<string>('')`
-  - `hint`: `input<string>('')`
-  - `rows`: `input<number>(4)`
-  - `maxlength`: `input<number | null>(null)`
-  - `showCharCount`: `input<boolean>(true)`
-  - `autoResize`: `input<boolean>(false)` — dynamically grows with multi-line content
-- **Features**:
-  - Live character count readout (`current / max`).
-  - Accessible `aria-describedby` integration.
+- **Inputs**: `label`, `placeholder`, `hint`, `rows`, `maxlength`, `autoResize`.
 
 ---
 
 ### E. Select / Dropdown (`UiSelectComponent` / `<ui-select>`)
 - **Selector**: `ui-select`
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `placeholder`: `input<string>('Select an option...')`
-  - `hint`: `input<string>('')`
-  - `options`: `input.required<UiSelectOption[]>()`
-    ```typescript
-    export interface UiSelectOption {
-      label: string;
-      value: any;
-      disabled?: boolean;
-      group?: string;
-      icon?: string;
-    }
-    ```
-  - `searchable`: `input<boolean>(false)` — enables live inline filtering
-  - `clearable`: `input<boolean>(false)`
-- **Features**:
-  - Optgroup grouping support.
-  - Native select fallback or accessible custom popover select with keyboard arrows & Esc support.
+- **Inputs**: `label`, `placeholder`, `hint`, `options`, `searchable`, `clearable`.
 
 ---
 
 ### F. Checkbox & Checkbox Group (`UiCheckboxComponent` & `UiCheckboxGroupComponent`)
 - **Selectors**: `ui-checkbox`, `ui-checkbox-group`
-- **`ui-checkbox`**:
-  - Single boolean or custom value check.
-  - Supports `indeterminate` state (tri-state).
-  - Rich label with optional subtitle/description slot.
-- **`ui-checkbox-group`**:
-  - Binds to an array of selected values (`T[]`).
-  - Inputs: `options: input.required<UiCheckboxOption[]>()`, `orientation: input<'horizontal' | 'vertical'>('vertical')`.
-  - Automatically toggles items in and out of the bound array value.
+- Single checkbox with tri-state indeterminate support; checkbox group bound to array values.
 
 ---
 
 ### G. Radio Group (`UiRadioGroupComponent` / `<ui-radio-group>`)
 - **Selector**: `ui-radio-group`
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `hint`: `input<string>('')`
-  - `options`: `input.required<UiRadioOption[]>()`
-  - `orientation`: `input<'horizontal' | 'vertical'>('vertical')`
-  - `cardStyle`: `input<boolean>(false)` — renders options as rich selectable cards with icons and descriptions
-- **Features**:
-  - Full WAI-ARIA radio group keyboard navigation (Arrow Up/Down/Left/Right).
+- Standard circular radios or modern selectable card tiles with keyboard navigation.
 
 ---
 
 ### H. Toggle Switch (`UiSwitchComponent` / `<ui-switch>`)
 - **Selector**: `ui-switch`
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `description`: `input<string>('')`
-  - `labelPosition`: `input<'left' | 'right'>('right')`
-  - `color`: `input<'primary' | 'success'>('primary')`
-- **Features**:
-  - Smooth animated pill switch with accessible role `switch` and `aria-checked`.
+- Smooth animated pill switch with accessible role `switch`.
 
 ---
 
 ### I. Datepicker (`UiDatepickerComponent` / `<ui-datepicker>`)
 - **Selector**: `ui-datepicker`
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `hint`: `input<string>('')`
-  - `min`: `input<string | null>(null)` (YYYY-MM-DD)
-  - `max`: `input<string | null>(null)`
-  - `quickPresets`: `input<boolean>(false)` — renders quick select buttons ("Today", "+7 Days", "+30 Days")
-- **Features**:
-  - Normalized date output formatting.
+- Standard date input with quick offset presets ("Today", "Tomorrow", "+7 Days", "+30 Days").
 
 ---
 
 ### J. Drag & Drop File Upload (`UiFileUploadComponent` / `<ui-file-upload>`)
 - **Selector**: `ui-file-upload`
-- **Inputs**:
-  - `label`: `input<string>('')`
-  - `hint`: `input<string>('')`
-  - `accept`: `input<string>('*')` (e.g. `image/*, .pdf, .docx`)
-  - `multiple`: `input<boolean>(false)`
-  - `maxSizeBytes`: `input<number>(10 * 1024 * 1024)` (10MB default)
-- **Features**:
-  - Visual drag-over highlighting with dropzone.
-  - File chips list displaying file name, formatted size (KB/MB), and remove button.
-  - Automatically sets form control errors if file exceeds size limit or invalid type.
+- Drag-and-drop zone with file picker, file size limits, and removable preview chips.
 
 ---
 
-### K. Dynamic JSON-Driven Form Engine (`UiDynamicFormComponent` / `<ui-dynamic-form>`)
+### K. Dynamic Signal Forms Engine (`UiDynamicFormComponent` / `<ui-dynamic-form>`)
 - **Selector**: `ui-dynamic-form`
-- **Role**: Takes a declarative JSON configuration schema and generates the complete reactive form and UI layout dynamically!
-- **Inputs**:
-  - `schema`: `input.required<DynamicFormSchema>()`
-- **Outputs**:
-  - `formSubmit`: `output<any>()`
-- **Schema Model**:
-  ```typescript
-  export interface DynamicFormField {
-    name: string;
-    type: 'text' | 'email' | 'password' | 'number' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'switch' | 'date' | 'file';
-    label: string;
-    placeholder?: string;
-    hint?: string;
-    defaultValue?: any;
-    required?: boolean;
-    validators?: {
-      min?: number;
-      max?: number;
-      minLength?: number;
-      maxLength?: number;
-      email?: boolean;
-      pattern?: string;
-    };
-    options?: { label: string; value: any; description?: string }[];
-    gridCols?: 1 | 2 | 3;
-    dependsOn?: {
-      field: string;
-      value: any;
-    };
-  }
-
-  export interface DynamicFormSchema {
-    title?: string;
-    description?: string;
-    submitText?: string;
-    fields: DynamicFormField[];
-  }
-  ```
+- Takes a JSON schema (`DynamicFormSchema`), creates an underlying model signal, builds the Signal Forms `FieldTree`, and renders all matching components dynamically with conditional visibility (`dependsOn`).
 
 ---
 
-## 3. Centralized Validation & Error Translation Engine
-
-Provide an injectable `FormErrorService` and an `InjectionToken` (`UI_FORM_ERROR_MESSAGES`) so applications can customize validation messages globally:
+## 3. Code Example: Signal Forms in Action
 
 ```typescript
-export const DEFAULT_ERROR_MESSAGES: Record<string, (error: any, fieldName?: string) => string> = {
-  required: (_, name) => `${name || 'This field'} is required.`,
-  email: () => 'Please enter a valid email address.',
-  minlength: (err, name) => `${name || 'Field'} must be at least ${err.requiredLength} characters (currently ${err.actualLength}).`,
-  maxlength: (err, name) => `${name || 'Field'} cannot exceed ${err.requiredLength} characters.`,
-  min: (err) => `Value must be at least ${err.min}.`,
-  max: (err) => `Value cannot exceed ${err.max}.`,
-  pattern: () => 'The value entered does not match the required format.',
-  fileSize: (err) => `File exceeds the maximum size limit of ${err.maxSize}.`,
-};
+import { Component, signal } from '@angular/core';
+import {
+  UiFormComponent,
+  UiInputComponent,
+  UiSelectComponent,
+  UiSwitchComponent,
+  UiCheckboxComponent,
+  FormField,
+  form,
+  required,
+  email,
+  minLength,
+} from './shared/components/forms';
+
+@Component({
+  selector: 'app-user-profile',
+  standalone: true,
+  imports: [
+    FormField,
+    UiFormComponent,
+    UiInputComponent,
+    UiSelectComponent,
+    UiSwitchComponent,
+    UiCheckboxComponent,
+  ],
+  template: `
+    <ui-form [form]="userForm" (formSubmit)="onSubmit($event)" submitText="Save Changes">
+      <ui-input
+        [formField]="userForm.name"
+        label="Full Name"
+        placeholder="Jane Doe"
+        required
+        clearable
+      />
+
+      <ui-input
+        [formField]="userForm.email"
+        type="email"
+        label="Email Address"
+        placeholder="jane@example.com"
+        required
+        clearable
+      />
+
+      <ui-select
+        [formField]="userForm.country"
+        label="Country"
+        [options]="countryOptions"
+        searchable
+        required
+      />
+
+      <ui-switch
+        [formField]="userForm.notifications"
+        label="Enable Email Notifications"
+      />
+
+      <ui-checkbox
+        [formField]="userForm.agreeTerms"
+        label="I agree to the Terms of Service"
+        required
+      />
+    </ui-form>
+  `
+})
+export class UserProfileComponent {
+  // 1. Model Signal
+  userModel = signal({
+    name: '',
+    email: '',
+    country: 'US',
+    notifications: true,
+    agreeTerms: false,
+  });
+
+  // 2. Signal Forms FieldTree
+  userForm = form(this.userModel, (u) => {
+    required(u.name, { message: 'Name is required' });
+    minLength(u.name, 2, { message: 'Name must be at least 2 characters' });
+    required(u.email, { message: 'Email is required' });
+    email(u.email, { message: 'Must be a valid email' });
+    required(u.country, { message: 'Country is required' });
+    required(u.agreeTerms, { message: 'You must agree to the Terms' });
+  });
+
+  countryOptions = [
+    { label: 'United States', value: 'US' },
+    { label: 'Canada', value: 'CA' },
+    { label: 'United Kingdom', value: 'UK' },
+  ];
+
+  onSubmit(formValue: any) {
+    console.log('Valid Signal Form Submitted:', formValue);
+  }
+}
 ```
-
----
-
-## 4. Showcase & Demo Site Architecture
-
-The accompanying showcase site must be an interactive Angular application featuring:
-
-1. **Interactive Demo Forms**:
-   - **User Registration & Profile Form**: Compound layout with text inputs, password toggle, email, date of birth, bio textarea, terms checkbox, and newsletter switch.
-   - **Job Application Form**: Demonstrating file upload (Resume/CV), select (Department, Role), experience radio group, portfolio URL, and dynamic skills tags.
-   - **Schema-Driven Dynamic Form**: A live JSON editor where developers can edit the JSON schema and watch the form re-render in real time!
-2. **Component Catalog / Documentation Explorer**:
-   - A dedicated tab showcasing each component in isolation with interactive property controls (disabled, error state, required, size, variant) and copyable HTML snippets.
-3. **Live Form State Inspector**:
-   - Real-time reactive cards displaying:
-     - `form.value` (formatted JSON)
-     - `form.status` (`VALID` / `INVALID` / `PENDING`)
-     - `form.dirty` / `form.touched` / `form.pristine`
-     - Active field-by-field validation errors.
-
----
-
-## 5. Verification Checklist
-
-- [ ] All components are standalone and run cleanly under Angular 22+.
-- [ ] No external UI framework (Material, Bootstrap, Tailwind) is required for core operation; pure CSS variables provide modern, beautiful aesthetics.
-- [ ] Supports both Reactive Forms (`formGroup`, `formControlName`) and Signal-driven workflows.
-- [ ] Zero TypeScript or template compiler warnings under strict mode.
-- [ ] Complete keyboard navigation and accessible ARIA attributes across all controls.

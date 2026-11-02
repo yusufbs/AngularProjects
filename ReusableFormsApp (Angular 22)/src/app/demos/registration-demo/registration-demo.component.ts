@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   UiFormComponent,
   UiInputComponent,
@@ -12,6 +11,12 @@ import {
   UiDatepickerComponent,
   UiSelectOption,
   UiRadioOption,
+  FormField,
+  form,
+  required,
+  minLength,
+  email,
+  pattern,
 } from '../../shared/components/forms';
 
 @Component({
@@ -19,7 +24,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    FormField,
     UiFormComponent,
     UiInputComponent,
     UiTextareaComponent,
@@ -35,16 +40,19 @@ import {
       <!-- Form Column -->
       <div class="demo-card form-panel">
         <div class="demo-card-header">
+          <div class="badge-row">
+            <span class="signal-tag">? Angular 22 Signal Forms</span>
+          </div>
           <h2 class="card-title">User Account & Profile Setup</h2>
           <p class="card-subtitle">
-            Demonstrates compound layout using <code>&lt;ui-form&gt;</code> with responsive grid-2 layout, validation triggers, clearable inputs, password toggle, and card radio groups.
+            Powered 100% by <strong>Signal Forms</strong> (<code>@angular/forms/signals</code>) � uses <code>form(profileModel, schema)</code>, <code>[formField]</code> directives, and zero <code>FormGroup</code> / <code>ReactiveFormsModule</code> boilerplate!
           </p>
         </div>
 
         <ui-form
-          [formGroup]="profileForm"
+          [form]="profileForm"
           layout="grid-2"
-          submitText="Create Account"
+          submitText="Create Account (Signal Forms)"
           [showReset]="true"
           resetText="Clear Form"
           [loading]="isSubmitting()"
@@ -53,73 +61,73 @@ import {
         >
           <!-- Full Name -->
           <ui-input
-            formControlName="fullName"
+            [formField]="profileForm.fullName"
             label="Full Name"
             placeholder="Jane Doe"
             hint="Legal first and last name"
-            prefixIcon="👤"
-            [required]="true"
+            prefixIcon="??"
+            required
             clearable
           />
 
           <!-- Email -->
           <ui-input
-            formControlName="email"
+            [formField]="profileForm.email"
             type="email"
             label="Work Email"
             placeholder="jane@company.com"
             hint="Used for account verification"
-            prefixIcon="✉️"
-            [required]="true"
+            prefixIcon="??"
+            required
             clearable
           />
 
           <!-- Password -->
           <ui-input
-            formControlName="password"
+            [formField]="profileForm.password"
             type="password"
             label="Password"
             placeholder="At least 8 characters"
             hint="Must include letters and numbers"
-            prefixIcon="🔒"
-            [required]="true"
+            prefixIcon="??"
+            required
             [showPasswordToggle]="true"
           />
 
           <!-- Date of Birth -->
           <ui-datepicker
-            formControlName="birthDate"
+            [formField]="profileForm.birthDate"
             label="Date of Birth"
             hint="Must be at least 18 years old"
-            [required]="true"
+            required
             quickPresets
           />
 
           <!-- Country -->
           <ui-select
-            formControlName="country"
+            [formField]="profileForm.country"
             label="Country / Region"
             placeholder="Select your country..."
             hint="Determines data residency compliance"
             [options]="countryOptions"
-            [required]="true"
+            required
             searchable
             clearable
           />
 
           <!-- Company Size -->
           <ui-select
-            formControlName="companySize"
+            [formField]="profileForm.companySize"
             label="Company Size"
             placeholder="Select company size..."
             [options]="companySizeOptions"
-            [required]="true"
+            required
           />
 
           <!-- Biography (Spans full width via CSS) -->
           <div style="grid-column: 1 / -1;">
             <ui-textarea
-              formControlName="bio"
+              [formField]="profileForm.bio"
               label="Professional Summary / Bio"
               placeholder="Brief overview of your experience and role..."
               hint="Visible on your public team profile"
@@ -133,34 +141,34 @@ import {
           <!-- Plan Selection (Radio Cards, Spans full width) -->
           <div style="grid-column: 1 / -1;">
             <ui-radio-group
-              formControlName="plan"
+              [formField]="profileForm.plan"
               label="Select Subscription Tier"
               hint="You can upgrade or downgrade anytime."
               [options]="planOptions"
               cardStyle
-              [required]="true"
+              required
             />
           </div>
 
           <!-- Toggles (Spans full width) -->
           <div style="grid-column: 1 / -1;" class="toggles-wrapper">
             <ui-switch
-              formControlName="twoFactor"
+              [formField]="profileForm.twoFactor"
               label="Two-Factor Authentication (2FA)"
               description="Require an authenticator code on sensitive administrative actions."
             />
 
             <ui-switch
-              formControlName="marketingEmails"
+              [formField]="profileForm.marketingEmails"
               label="Product Updates & Engineering Briefings"
               description="Receive weekly summaries of new features and platform improvements."
             />
 
             <ui-checkbox
-              formControlName="agreeTerms"
+              [formField]="profileForm.agreeTerms"
               label="I agree to the Enterprise Terms of Service and Privacy Policy"
               description="Required for account activation."
-              [required]="true"
+              required
             />
           </div>
         </ui-form>
@@ -170,30 +178,36 @@ import {
       <div class="demo-card inspector-panel">
         <div class="demo-card-header">
           <div class="inspector-header-top">
-            <h3 class="card-title">Live Reactive State</h3>
+            <h3 class="card-title">Live Signal State</h3>
             <span
               class="status-pill"
-              [class.valid]="profileForm.valid"
-              [class.invalid]="profileForm.invalid"
+              [class.valid]="profileForm().valid()"
+              [class.invalid]="profileForm().invalid()"
             >
-              {{ profileForm.valid ? 'VALID' : 'INVALID' }}
+              {{ profileForm().valid() ? 'VALID' : 'INVALID' }}
             </span>
           </div>
-          <p class="card-subtitle">Real-time inspection of FormGroup reactive streams.</p>
+          <p class="card-subtitle">Real-time inspection of <code>FieldTree</code> signal reactivity.</p>
         </div>
 
         <div class="inspector-stats">
           <div class="stat-box">
             <span class="stat-label">Touched</span>
-            <span class="stat-value" [class.true-val]="profileForm.touched">{{ profileForm.touched }}</span>
+            <span class="stat-value" [class.true-val]="profileForm().touched()">
+              {{ profileForm().touched() }}
+            </span>
           </div>
           <div class="stat-box">
             <span class="stat-label">Dirty</span>
-            <span class="stat-value" [class.true-val]="profileForm.dirty">{{ profileForm.dirty }}</span>
+            <span class="stat-value" [class.true-val]="profileForm().dirty()">
+              {{ profileForm().dirty() }}
+            </span>
           </div>
           <div class="stat-box">
-            <span class="stat-label">Pristine</span>
-            <span class="stat-value">{{ profileForm.pristine }}</span>
+            <span class="stat-label">Errors</span>
+            <span class="stat-value" [class.true-val]="profileForm().errors().length > 0">
+              {{ profileForm().errors().length }}
+            </span>
           </div>
         </div>
 
@@ -203,16 +217,16 @@ import {
               <svg class="success-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              <span>Successfully Submitted!</span>
+              <span>Successfully Submitted with Signal Forms!</span>
             </div>
-            <p class="success-desc">The form validated and emitted typed JSON data cleanly.</p>
+            <p class="success-desc">Validated via <code>submit(profileForm, ...)</code> and returned typed signal data.</p>
           </div>
         }
 
         <div class="json-viewer-header">
-          <span>Form Value Output (JSON)</span>
+          <span>Underlying Model Signal (JSON)</span>
         </div>
-        <pre class="json-code"><code>{{ profileForm.value | json }}</code></pre>
+        <pre class="json-code"><code>{{ profileModel() | json }}</code></pre>
       </div>
     </div>
   `,
@@ -242,6 +256,22 @@ import {
       margin-bottom: 1.5rem;
       border-bottom: 1px solid var(--ui-form-border, #f3f4f6);
       padding-bottom: 1rem;
+    }
+
+    .badge-row {
+      margin-bottom: 0.5rem;
+    }
+
+    .signal-tag {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: #4f46e5;
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .card-title {
@@ -378,26 +408,38 @@ import {
   `],
 })
 export class RegistrationDemoComponent {
-  private fb = inject(FormBuilder);
-
   isSubmitting = signal<boolean>(false);
   submittedPayload = signal<any>(null);
 
-  profileForm = this.fb.group({
-    fullName: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: [
-      '',
-      [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[0-9])/)],
-    ],
-    birthDate: ['', [Validators.required]],
-    country: ['', [Validators.required]],
-    companySize: ['1-10', [Validators.required]],
-    bio: [''],
-    plan: ['pro', [Validators.required]],
-    twoFactor: [true],
-    marketingEmails: [false],
-    agreeTerms: [false, [Validators.requiredTrue]],
+  // 1. The pure Model Signal
+  profileModel = signal({
+    fullName: '',
+    email: '',
+    password: '',
+    birthDate: '',
+    country: '',
+    companySize: '1-10',
+    bio: '',
+    plan: 'pro',
+    twoFactor: true,
+    marketingEmails: false,
+    agreeTerms: false,
+  });
+
+  // 2. The Angular 22 Signal Forms FieldTree!
+  profileForm = form(this.profileModel, (p) => {
+    required(p.fullName, { message: 'Full name is required.' });
+    minLength(p.fullName, 2, { message: 'Must be at least 2 characters.' });
+    required(p.email, { message: 'Work email is required.' });
+    email(p.email, { message: 'Please enter a valid work email address.' });
+    required(p.password, { message: 'Password is required.' });
+    minLength(p.password, 8, { message: 'Password must be at least 8 characters long.' });
+    pattern(p.password, /^(?=.*[0-9])/, { message: 'Password must contain at least 1 number.' });
+    required(p.birthDate, { message: 'Date of birth is required.' });
+    required(p.country, { message: 'Please select your country / region.' });
+    required(p.companySize, { message: 'Please select company size.' });
+    required(p.plan, { message: 'Please select a subscription tier.' });
+    required(p.agreeTerms, { message: 'You must agree to the Terms of Service to continue.' });
   });
 
   countryOptions: UiSelectOption[] = [

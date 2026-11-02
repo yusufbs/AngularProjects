@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   UiFormComponent,
   UiInputComponent,
@@ -10,6 +9,14 @@ import {
   UiFileUploadComponent,
   UiSelectOption,
   UiCheckboxOption,
+  FormField,
+  form,
+  required,
+  minLength,
+  email,
+  min,
+  max,
+  pattern,
 } from '../../shared/components/forms';
 
 @Component({
@@ -17,7 +24,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    FormField,
     UiFormComponent,
     UiInputComponent,
     UiTextareaComponent,
@@ -31,16 +38,19 @@ import {
       <!-- Form Column -->
       <div class="demo-card form-panel">
         <div class="demo-card-header">
+          <div class="badge-row">
+            <span class="signal-tag">? Angular 22 Signal Forms</span>
+          </div>
           <h2 class="card-title">Engineering Career Application</h2>
           <p class="card-subtitle">
-            Demonstrating <code>&lt;ui-file-upload&gt;</code> for resume attachments, <code>&lt;ui-checkbox-group&gt;</code> for skills matrices, and formatted URL/numeric inputs.
+            Demonstrating <code>&lt;ui-file-upload&gt;</code> for resume attachments and <code>&lt;ui-checkbox-group&gt;</code> for multi-value arrays bound directly via <code>[formField]</code>.
           </p>
         </div>
 
         <ui-form
-          [formGroup]="jobForm"
+          [form]="jobForm"
           layout="grid-2"
-          submitText="Submit Application"
+          submitText="Submit Application (Signal Forms)"
           [showReset]="true"
           resetText="Clear"
           [loading]="isSubmitting()"
@@ -49,57 +59,57 @@ import {
         >
           <!-- Candidate Name -->
           <ui-input
-            formControlName="applicantName"
+            [formField]="jobForm.applicantName"
             label="Candidate Name"
             placeholder="Morgan Vance"
-            prefixIcon="👤"
-            [required]="true"
+            prefixIcon="??"
+            required
             clearable
           />
 
           <!-- Email -->
           <ui-input
-            formControlName="email"
+            [formField]="jobForm.email"
             type="email"
             label="Email Address"
             placeholder="morgan@engineering.dev"
-            prefixIcon="✉️"
-            [required]="true"
+            prefixIcon="??"
+            required
             clearable
           />
 
           <!-- Role -->
           <ui-select
-            formControlName="role"
+            [formField]="jobForm.role"
             label="Role Applied For"
             placeholder="Select a position..."
             [options]="roleOptions"
-            [required]="true"
+            required
           />
 
           <!-- Expected Salary -->
           <ui-input
-            formControlName="expectedSalary"
+            [formField]="jobForm.expectedSalary"
             type="number"
             label="Expected Base Salary (USD / yr)"
             placeholder="150000"
             hint="Numbers only"
-            prefixIcon="💲"
+            prefixIcon="??"
             [min]="40000"
             [max]="500000"
-            [required]="true"
+            required
           />
 
           <!-- Portfolio URL (Full width) -->
           <div style="grid-column: 1 / -1;">
             <ui-input
-              formControlName="portfolioUrl"
+              [formField]="jobForm.portfolioUrl"
               type="url"
               label="GitHub or Portfolio URL"
               placeholder="https://github.com/username"
               hint="Must be a valid URL starting with http:// or https://"
-              prefixIcon="🌐"
-              [required]="true"
+              prefixIcon="??"
+              required
               clearable
             />
           </div>
@@ -107,30 +117,30 @@ import {
           <!-- Skills Matrix (Full width) -->
           <div style="grid-column: 1 / -1;">
             <ui-checkbox-group
-              formControlName="skills"
+              [formField]="jobForm.skills"
               label="Core Technical Proficiencies"
               hint="Select at least one skill that aligns with your primary expertise."
               [options]="skillsOptions"
               orientation="horizontal"
-              [required]="true"
+              required
             />
           </div>
 
           <!-- Resume File Upload (Full width) -->
           <div style="grid-column: 1 / -1;">
             <ui-file-upload
-              formControlName="resumeFile"
+              [formField]="jobForm.resumeFile"
               label="Attach Resume / Curriculum Vitae"
               hint="PDF or Word documents accepted (up to 10MB)."
               accept=".pdf,.doc,.docx"
-              [required]="true"
+              required
             />
           </div>
 
           <!-- Cover Letter (Full width) -->
           <div style="grid-column: 1 / -1;">
             <ui-textarea
-              formControlName="coverLetter"
+              [formField]="jobForm.coverLetter"
               label="Why are you interested in this role?"
               placeholder="Highlight any relevant open-source contributions or architectural achievements..."
               [rows]="4"
@@ -149,13 +159,13 @@ import {
             <h3 class="card-title">Submission Diagnostics</h3>
             <span
               class="status-pill"
-              [class.valid]="jobForm.valid"
-              [class.invalid]="jobForm.invalid"
+              [class.valid]="jobForm().valid()"
+              [class.invalid]="jobForm().invalid()"
             >
-              {{ jobForm.valid ? 'READY' : 'INCOMPLETE' }}
+              {{ jobForm().valid() ? 'READY' : 'INCOMPLETE' }}
             </span>
           </div>
-          <p class="card-subtitle">Real-time binding inspection for arrays and binary file data.</p>
+          <p class="card-subtitle">Real-time signal inspection of binary files and array data.</p>
         </div>
 
         @if (submittedData()) {
@@ -164,16 +174,16 @@ import {
               <svg class="success-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
               </svg>
-              <span>Application Received!</span>
+              <span>Application Received via Signal Forms!</span>
             </div>
             <p class="success-desc">Resume file attached and skills array processed cleanly.</p>
           </div>
         }
 
         <div class="json-viewer-header">
-          <span>Active Form Value (JSON)</span>
+          <span>Active Model Signal Value (JSON)</span>
         </div>
-        <pre class="json-code"><code>{{ serializeFormValue(jobForm.value) }}</code></pre>
+        <pre class="json-code"><code>{{ serializeFormValue(jobModel()) }}</code></pre>
       </div>
     </div>
   `,
@@ -203,6 +213,22 @@ import {
       margin-bottom: 1.5rem;
       border-bottom: 1px solid var(--ui-form-border, #f3f4f6);
       padding-bottom: 1rem;
+    }
+
+    .badge-row {
+      margin-bottom: 0.5rem;
+    }
+
+    .signal-tag {
+      font-size: 0.725rem;
+      font-weight: 700;
+      color: #4f46e5;
+      background: rgba(79, 70, 229, 0.1);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .card-title {
@@ -294,23 +320,35 @@ import {
   `],
 })
 export class JobApplicationDemoComponent {
-  private fb = inject(FormBuilder);
-
   isSubmitting = signal<boolean>(false);
   submittedData = signal<any>(null);
 
-  jobForm = this.fb.group({
-    applicantName: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    role: ['senior-frontend', [Validators.required]],
-    expectedSalary: [160000, [Validators.required, Validators.min(40000), Validators.max(500000)]],
-    portfolioUrl: [
-      '',
-      [Validators.required, Validators.pattern(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/)],
-    ],
-    skills: [['Angular', 'TypeScript'], [Validators.required]],
-    resumeFile: [null, [Validators.required]],
-    coverLetter: [''],
+  jobModel = signal({
+    applicantName: '',
+    email: '',
+    role: 'senior-frontend',
+    expectedSalary: 160000,
+    portfolioUrl: '',
+    skills: ['Angular', 'TypeScript'] as string[],
+    resumeFile: null as any,
+    coverLetter: '',
+  });
+
+  jobForm = form(this.jobModel, (j) => {
+    required(j.applicantName, { message: 'Candidate name is required.' });
+    minLength(j.applicantName, 2, { message: 'Must be at least 2 characters.' });
+    required(j.email, { message: 'Email address is required.' });
+    email(j.email, { message: 'Please enter a valid email address.' });
+    required(j.role, { message: 'Role applied for is required.' });
+    required(j.expectedSalary, { message: 'Expected salary is required.' });
+    min(j.expectedSalary, 40000, { message: 'Salary must be at least $40,000.' });
+    max(j.expectedSalary, 500000, { message: 'Salary cannot exceed $500,000.' });
+    required(j.portfolioUrl, { message: 'Portfolio or GitHub URL is required.' });
+    pattern(j.portfolioUrl, /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/, {
+      message: 'Must be a valid URL starting with http:// or https://',
+    });
+    required(j.skills, { message: 'Select at least one skill proficiency.' });
+    required(j.resumeFile, { message: 'Resume document is required.' });
   });
 
   roleOptions: UiSelectOption[] = [
@@ -321,9 +359,9 @@ export class JobApplicationDemoComponent {
   ];
 
   skillsOptions: UiCheckboxOption[] = [
-    { label: 'Angular 22+ (Signals)', value: 'Angular' },
-    { label: 'TypeScript 5.x', value: 'TypeScript' },
-    { label: 'RxJS & State Machines', value: 'RxJS' },
+    { label: 'Angular 22+ (Signal Forms)', value: 'Angular' },
+    { label: 'TypeScript 6.x', value: 'TypeScript' },
+    { label: 'Signals Architecture', value: 'RxJS' },
     { label: 'Web Components & A11y', value: 'Accessibility' },
     { label: 'Node.js / Bun', value: 'Node' },
     { label: 'GraphQL & REST', value: 'API' },
@@ -342,7 +380,6 @@ export class JobApplicationDemoComponent {
   }
 
   serializeFormValue(val: any): string {
-    // Transform file instance to printable name if present
     const copy = { ...val };
     if (copy.resumeFile instanceof File) {
       copy.resumeFile = `[File: ${copy.resumeFile.name} (${copy.resumeFile.size} bytes)]`;

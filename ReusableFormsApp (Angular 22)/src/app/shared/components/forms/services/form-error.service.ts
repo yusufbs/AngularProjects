@@ -1,14 +1,19 @@
 import { Injectable, InjectionToken, inject } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
+import { ValidationError } from '@angular/forms/signals';
 import { FormValidationDictionary } from '../models/form.models';
 
 export const DEFAULT_FORM_ERROR_MESSAGES: FormValidationDictionary = {
   required: (_, label) => `${label || 'This field'} is required.`,
   email: () => 'Please enter a valid email address.',
   minlength: (err, label) =>
-    `${label || 'Field'} must be at least ${err.requiredLength} characters (currently ${err.actualLength}).`,
+    `${label || 'Field'} must be at least ${err.requiredLength || err.minLength || ''} characters.`,
+  minLength: (err, label) =>
+    `${label || 'Field'} must be at least ${err.minLength || err.requiredLength || ''} characters.`,
   maxlength: (err, label) =>
-    `${label || 'Field'} cannot exceed ${err.requiredLength} characters.`,
+    `${label || 'Field'} cannot exceed ${err.requiredLength || err.maxLength || ''} characters.`,
+  maxLength: (err, label) =>
+    `${label || 'Field'} cannot exceed ${err.maxLength || err.requiredLength || ''} characters.`,
   min: (err, label) => `${label || 'Value'} must be at least ${err.min}.`,
   max: (err, label) => `${label || 'Value'} cannot exceed ${err.max}.`,
   pattern: () => 'The value entered has an invalid format.',
@@ -52,25 +57,16 @@ export class FormErrorService {
     return `${fieldLabel || 'Field'} is invalid.`;
   }
 
-  markAllAsTouchedAndFocusFirst(formGroup: FormGroup, containerElement?: HTMLElement): void {
-    formGroup.markAllAsTouched();
-    formGroup.updateValueAndValidity();
-
-    // Find first invalid control in the DOM to autofocus
-    if (typeof document !== 'undefined') {
-      setTimeout(() => {
-        const root = containerElement || document;
-        const invalidElement = root.querySelector(
-          '.ng-invalid:not(form):not(fieldset), [aria-invalid="true"]'
-        ) as HTMLElement | null;
-
-        if (invalidElement) {
-          invalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          if (typeof invalidElement.focus === 'function') {
-            invalidElement.focus();
-          }
-        }
-      }, 50);
+  resolveSignalError(error: ValidationError, fieldLabel?: string): string {
+    if (error.message) {
+      return error.message;
     }
+
+    const resolver = this.customMessages[error.kind] || DEFAULT_FORM_ERROR_MESSAGES[error.kind];
+    if (resolver) {
+      return resolver(error, fieldLabel);
+    }
+
+    return `${fieldLabel || 'Field'} error: ${error.kind}.`;
   }
 }

@@ -10,18 +10,17 @@ import {
   booleanAttribute,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FieldTree, submit, FormField } from '@angular/forms/signals';
 import { FormErrorService } from '../services/form-error.service';
 
 @Component({
   selector: 'ui-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <form
-      [formGroup]="formGroup()"
-      (ngSubmit)="handleSubmit($event)"
+      (submit)="handleSubmit($event)"
       class="ui-form"
       [class.layout-stacked]="layout() === 'stacked'"
       [class.layout-grid-2]="layout() === 'grid-2'"
@@ -37,10 +36,8 @@ import { FormErrorService } from '../services/form-error.service';
             <span class="ui-summary-title">Please correct the errors in the form before submitting:</span>
           </div>
           <ul class="ui-summary-list">
-            @for (err of errorSummaryList(); track err.name) {
-              <li>
-                <strong>{{ err.label }}:</strong> {{ err.message }}
-              </li>
+            @for (err of errorSummaryList(); track err.label) {
+              <li>{{ err.message }}</li>
             }
           </ul>
         </div>
@@ -224,7 +221,8 @@ export class UiFormComponent {
   private elementRef = inject(ElementRef);
   private errorService = inject(FormErrorService);
 
-  formGroup = input.required<FormGroup>();
+  // New Signal Forms FieldTree input!
+  form = input.required<FieldTree<Record<string, any>> | any>();
   submitText = input<string>('Submit');
   showReset = input(false, { transform: booleanAttribute });
   resetText = input<string>('Reset');
@@ -238,45 +236,67 @@ export class UiFormComponent {
 
   submitted = signal<boolean>(false);
 
-  hasErrors = computed(() => this.formGroup().invalid);
-
-  errorSummaryList = computed(() => {
-    const fg = this.formGroup();
-    const errors: { name: string; label: string; message: string }[] = [];
-    if (!fg) return errors;
-
-    Object.keys(fg.controls).forEach((key) => {
-      const ctrl = fg.get(key);
-      if (ctrl && ctrl.invalid) {
-        const readableLabel = key
-          .replace(/([A-Z])/g, ' $1')
-          .replace(/^./, (s) => s.toUpperCase());
-        const msg = this.errorService.resolveError(ctrl, readableLabel) || 'Invalid value.';
-        errors.push({ name: key, label: readableLabel, message: msg });
-      }
-    });
-
-    return errors;
+  hasErrors = computed(() => {
+    const f = this.form();
+    return f ? f().invalid() : false;
   });
 
-  handleSubmit(event: Event): void {
+  errorSummaryList = computed(() => {
+    const f = this.form();
+    if (!f) return [];
+    const errors = f().errors();
+    return (errors as any[]).map((err: any) => {
+      const msg = err.message || this.errorService.resolveSignalError(err);
+      return {
+        label: err.kind,
+        message: msg,
+      };
+    });
+  });
+
+  async handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
     this.submitted.set(true);
 
-    if (this.formGroup().valid) {
-      this.formSubmit.emit(this.formGroup().value);
-    } else {
-      this.errorService.markAllAsTouchedAndFocusFirst(
-        this.formGroup(),
-        this.elementRef.nativeElement
-      );
-      this.invalidSubmit.emit(this.formGroup().errors || this.formGroup().value);
+    const f = this.form();
+    if (!f) return;
+
+    const success = await submit(f, async () => {
+      this.formSubmit.emit(f().value());
+    });
+
+    if (!success) {
+      this.focusFirstInvalid();
+      this.invalidSubmit.emit(f().errors());
     }
   }
 
   handleReset(): void {
     this.submitted.set(false);
-    this.formGroup().reset();
+    const f = this.form();
+    if (f) {
+      f().reset();
+    }
     this.formReset.emit();
   }
+
+  private focusFirstInvalid(): void {
+    if (typeof document !== 'undefined') {
+      setTimeout(() => {
+        const root = this.elementRef.nativeElement || document;
+        const invalidEl = root.querySelector(
+          '.ng-invalid:not(form):not(fieldset), [aria-invalid="true"]'
+        ) as HTMLElement | null;
+
+        if (invalidEl) {
+          invalidEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (typeof invalidEl.focus === 'function') {
+            invalidEl.focus();
+          }
+        }
+      }, 50);
+    }
+  }
 }
+
+

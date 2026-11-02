@@ -248,7 +248,7 @@ export class UiTextareaComponent implements ControlValueAccessor, AfterViewInit 
   readonly = input(false, { transform: booleanAttribute });
   disabled = input(false, { transform: booleanAttribute });
   rows = input<number>(4);
-  maxlength = input<number | null>(null);
+  maxlength = input<number | string | null | undefined>(null);
   autoResize = input(false, { transform: booleanAttribute });
 
   value = signal<string>('');
@@ -343,3 +343,4 @@ export class UiTextareaComponent implements ControlValueAccessor, AfterViewInit 
     el.style.height = `${el.scrollHeight}px`;
   }
 }
+

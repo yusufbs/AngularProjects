@@ -1,15 +1,19 @@
-# Angular 22+ Reusable Form Components Suite
+# Angular 22+ Reusable Form Components Suite (Signal Forms)
 
-A zero-dependency, accessible, highly customizable, and signal-ready form component library and showcase application built for **Angular 22+**.
+A zero-dependency, accessible, highly customizable, and signal-native form component library and showcase application built for **Angular 22+** powered by **`@angular/forms/signals`**.
 
 ---
 
 ## 🎯 Key Highlights
 
-- **Modern Angular 22 Architecture**: Built natively with Standalone Components, Signal Inputs (`input()`, `input.required()`, `model()`), Signal Outputs (`output()`), and modern control flow (`@if`, `@for`).
+- **Native Angular 22 Signal Forms**:
+  - Replaces legacy `FormGroup`, `FormControl`, and `FormBuilder` with modern `form(model, schema)`, `FieldTree`, and `[formField]` directives.
+  - Reactive model signals (`model = signal({...})`) serve as the source of truth with bidirectional synchronization.
+  - Type-safe, functional validation (`required`, `email`, `minLength`, `maxLength`, `min`, `max`, `pattern`).
+  - Asynchronous form submission and invalid autofocus using `submit(formTree, action)`.
 - **Complete Form Ecosystem**:
-  - `<ui-form>`: Form container with automatic validation triggers, error summary banners, dirty/touched tracking, and submit lifecycle hooks.
-  - `<ui-form-field>`: Structural field wrapper with labels, required indicators, hints, and error animations.
+  - `<ui-form>`: Form container component accepting `[form]="fieldTree"`.
+  - `<ui-form-field>`: Structural field wrapper with labels, required asterisks, hints, and error animations.
   - `<ui-input>`: Versatile text, email, password, number, search inputs with clearable & password toggle support.
   - `<ui-textarea>`: Multi-line text input with character counting and auto-resize.
   - `<ui-select>`: Dropdown with search filtering and custom option grouping.
@@ -18,96 +22,114 @@ A zero-dependency, accessible, highly customizable, and signal-ready form compon
   - `<ui-switch>`: Animated toggle switch with accessibility compliance.
   - `<ui-datepicker>`: Standardized date input with quick preset helpers.
   - `<ui-file-upload>`: Drag-and-drop zone with file list chips and size validation.
-  - `<ui-dynamic-form>`: Complete JSON schema-driven form generation engine.
-- **Universal Form Binding**: Implements `ControlValueAccessor` to work with `ReactiveFormsModule` (`formControlName`, `[formControl]`), `FormsModule` (`[(ngModel)]`), or Signal two-way bindings.
-- **Zero External CSS Dependencies**: 100% scoped CSS powered by CSS Custom Properties (variables). Fully themeable, dark mode ready, and integrates with Tailwind, Bootstrap, or Material if desired.
-- **WCAG 2.2 AA Accessibility**: Full ARIA markup (`aria-invalid`, `aria-describedby`, `aria-required`), keyboard focus rings, and screen-reader announcements.
+  - `<ui-dynamic-form>`: Complete JSON schema-driven dynamic form generation engine powered by Signal Forms.
+- **Universal Binding**: Works seamlessly with `[formField]`, direct two-way signals (`[(value)]`), and `[(ngModel)]`.
+- **Zero External CSS Dependencies**: 100% scoped CSS powered by CSS Custom Properties (variables). Fully themeable, dark mode ready.
+- **WCAG 2.2 AA Accessibility**: Full ARIA markup (`aria-invalid`, `aria-describedby`), keyboard focus rings, and screen-reader announcements.
 
 ---
 
-## 🚀 Quick Start in Any Angular Project
+## 🚀 Quick Start with Signal Forms
 
 ### 1. Copy the Components
 Copy the `src/app/shared/components/forms/` directory into your project's `shared` or `core` folder.
 
 ### 2. Import into your Standalone Component
 ```typescript
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, signal } from '@angular/core';
 import {
   UiFormComponent,
   UiInputComponent,
   UiSelectComponent,
   UiCheckboxComponent,
-  UiSwitchComponent
+  UiSwitchComponent,
+  FormField,
+  form,
+  required,
+  email,
+  minLength,
 } from './shared/components/forms';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
   imports: [
-    ReactiveFormsModule,
+    FormField,
     UiFormComponent,
     UiInputComponent,
     UiSelectComponent,
     UiCheckboxComponent,
-    UiSwitchComponent
+    UiSwitchComponent,
   ],
   template: `
-    <ui-form [formGroup]="userForm" (formSubmit)="onSubmit($event)" submitText="Save Changes">
+    <ui-form [form]="userForm" (formSubmit)="onSubmit($event)" submitText="Save Changes">
       <ui-input
-        formControlName="name"
+        [formField]="userForm.name"
         label="Full Name"
         placeholder="Jane Doe"
         hint="Enter your legal first and last name"
+        required
+        clearable
       />
 
       <ui-input
-        formControlName="email"
+        [formField]="userForm.email"
         type="email"
         label="Email Address"
         placeholder="jane@example.com"
+        required
         clearable
       />
 
       <ui-select
-        formControlName="country"
+        [formField]="userForm.country"
         label="Country"
         [options]="countryOptions"
         searchable
+        required
       />
 
       <ui-switch
-        formControlName="notifications"
+        [formField]="userForm.notifications"
         label="Enable Email Notifications"
       />
 
       <ui-checkbox
-        formControlName="agreeTerms"
+        [formField]="userForm.agreeTerms"
         label="I agree to the Terms of Service"
+        required
       />
     </ui-form>
   `
 })
 export class UserProfileComponent {
-  private fb = inject(FormBuilder);
+  // Model Signal
+  userModel = signal({
+    name: '',
+    email: '',
+    country: 'US',
+    notifications: true,
+    agreeTerms: false,
+  });
 
-  userForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    country: ['US', [Validators.required]],
-    notifications: [true],
-    agreeTerms: [false, [Validators.requiredTrue]]
+  // Signal Forms FieldTree
+  userForm = form(this.userModel, (u) => {
+    required(u.name, { message: 'Full name is required' });
+    minLength(u.name, 2, { message: 'Must be at least 2 characters' });
+    required(u.email, { message: 'Email address is required' });
+    email(u.email, { message: 'Please enter a valid email address' });
+    required(u.country, { message: 'Country is required' });
+    required(u.agreeTerms, { message: 'You must agree to the Terms' });
   });
 
   countryOptions = [
     { label: 'United States', value: 'US' },
     { label: 'Canada', value: 'CA' },
-    { label: 'United Kingdom', value: 'UK' }
+    { label: 'United Kingdom', value: 'UK' },
   ];
 
   onSubmit(formValue: any) {
-    console.log('Valid Form Submitted:', formValue);
+    console.log('Valid Signal Form Submitted:', formValue);
   }
 }
 ```
@@ -126,32 +148,4 @@ Override any of the design tokens in your global `styles.css`:
   --ui-form-border: #e2e8f0;
   --ui-form-bg: #ffffff;
 }
-```
-
----
-
-## 📁 Repository Structure
-
-```text
-├── Reusable Form Components (Angular 22)/
-│   ├── prompt.md                 # Complete Master Engineering Prompt
-│   └── README.md                 # Documentation & Architecture Reference
-│
-└── ReusableFormsApp (Angular 22)/ # Runnable Angular 22 Showcase Site
-    ├── src/app/shared/components/forms/
-    │   ├── ui-form/              # Form Container Component
-    │   ├── ui-form-field/        # Layout & Validation Wrapper
-    │   ├── ui-input/             # Text/Email/Password/Number Input
-    │   ├── ui-textarea/          # Auto-resizing Textarea
-    │   ├── ui-select/            # Searchable Dropdown
-    │   ├── ui-checkbox/          # Checkbox & Tri-state
-    │   ├── ui-checkbox-group/    # Multi-select Checkbox Group
-    │   ├── ui-radio-group/       # Radio Group & Card Options
-    │   ├── ui-switch/            # Accessible Toggle Switch
-    │   ├── ui-datepicker/        # Standard Date Input
-    │   ├── ui-file-upload/       # Drag-and-drop File Upload
-    │   ├── ui-dynamic-form/      # Dynamic JSON-Driven Form Engine
-    │   ├── services/             # Form Error Resolver Service
-    │   └── models/               # Form Types, Interfaces & Schemas
-    └── src/app/pages/            # Showcase Demos, Playground, & Component Catalog
 ```

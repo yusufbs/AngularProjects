@@ -15,3 +15,22 @@ export * from './ui-dynamic-form/ui-dynamic-form.component';
 // Export Models & Services
 export * from './models/form.models';
 export * from './services/form-error.service';
+
+// Re-export Signal Forms core primitives for easy 1-line imports
+export {
+  FormField,
+  form,
+  submit,
+  schema,
+  required,
+  email,
+  minLength,
+  maxLength,
+  min,
+  max,
+  pattern,
+  disabled,
+  readonly,
+  hidden,
+} from '@angular/forms/signals';
+export type { Field, FieldTree, FieldState, ValidationError } from '@angular/forms/signals';

@@ -141,7 +141,7 @@ const INITIAL_SCHEMA: DynamicFormSchema = {
         <div class="demo-card-header">
           <div class="renderer-title-wrap">
             <h3 class="card-title">Live Generated UI Form</h3>
-            <span class="active-pill">Dynamic Engine</span>
+            <span class="active-pill">? Signal Forms Engine</span>
           </div>
           <p class="card-subtitle">
             Rendered automatically by <code>&lt;ui-dynamic-form&gt;</code> without writing any manual HTML templates!
@@ -332,3 +332,4 @@ export class DynamicFormDemoComponent {
     this.submittedOutput.set(null);
   }
 }
+
