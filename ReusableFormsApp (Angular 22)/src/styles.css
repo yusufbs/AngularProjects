@@ -1,0 +1,80 @@
+/* Global Design Tokens for Reusable Forms */
+:root {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
+
+  /* Form Theme Tokens */
+  --ui-form-primary: #4f46e5;
+  --ui-form-primary-hover: #4338ca;
+  --ui-form-primary-focus: rgba(79, 70, 229, 0.2);
+  --ui-form-bg: #ffffff;
+  --ui-form-surface: #f9fafb;
+  --ui-form-surface-alt: #f3f4f6;
+  --ui-form-border: #d1d5db;
+  --ui-form-border-hover: #9ca3af;
+  --ui-form-border-focus: #4f46e5;
+  --ui-form-text: #111827;
+  --ui-form-text-muted: #6b7280;
+  --ui-form-text-subtle: #9ca3af;
+  
+  --ui-form-error: #ef4444;
+  --ui-form-error-bg: #fef2f2;
+  --ui-form-error-border: #fca5a5;
+  --ui-form-error-text: #b91c1c;
+
+  --ui-form-success: #10b981;
+  --ui-form-success-bg: #ecfdf5;
+  --ui-form-success-border: #a7f3d0;
+  --ui-form-success-text: #047857;
+
+  --ui-form-warning: #f59e0b;
+  --ui-form-radius-sm: 6px;
+  --ui-form-radius: 8px;
+  --ui-form-radius-lg: 12px;
+  --ui-form-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --ui-form-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --ui-form-transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme='dark'] {
+  --ui-form-primary: #6366f1;
+  --ui-form-primary-hover: #818cf8;
+  --ui-form-primary-focus: rgba(99, 102, 241, 0.3);
+  --ui-form-bg: #1f2937;
+  --ui-form-surface: #111827;
+  --ui-form-surface-alt: #374151;
+  --ui-form-border: #374151;
+  --ui-form-border-hover: #4b5563;
+  --ui-form-border-focus: #6366f1;
+  --ui-form-text: #f9fafb;
+  --ui-form-text-muted: #9ca3af;
+  --ui-form-text-subtle: #6b7280;
+
+  --ui-form-error: #f87171;
+  --ui-form-error-bg: rgba(239, 68, 68, 0.12);
+  --ui-form-error-border: #ef4444;
+  --ui-form-error-text: #fca5a5;
+
+  --ui-form-success: #34d399;
+  --ui-form-success-bg: rgba(16, 185, 129, 0.12);
+  --ui-form-success-border: #10b981;
+  --ui-form-success-text: #6ee7b7;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  color: var(--ui-form-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}

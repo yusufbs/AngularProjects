@@ -1,0 +1,146 @@
+<div class="app-layout">
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-wrap">
+            <span class="brand-title">Angular 22 Form Suite</span>
+            <span class="version-tag">Angular v22</span>
+          </div>
+          <span class="brand-subtitle">Production-Grade Reusable Components & Dynamic Form Engine</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button
+          type="button"
+          class="theme-toggle-btn"
+          (click)="toggleTheme()"
+          [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+        >
+          @if (isDarkMode()) {
+            <!-- Sun Icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          } @else {
+            <!-- Moon Icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <nav class="nav-tabs-bar" aria-label="Showcase Navigation">
+      <div class="tabs-inner">
+        <button
+          type="button"
+          class="nav-tab"
+          [class.active]="activeTab() === 'registration'"
+          (click)="setTab('registration')"
+        >
+          <span class="tab-icon">👤</span>
+          <span>User Profile Form</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab"
+          [class.active]="activeTab() === 'job'"
+          (click)="setTab('job')"
+        >
+          <span class="tab-icon">💼</span>
+          <span>Job Application & Files</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab"
+          [class.active]="activeTab() === 'dynamic'"
+          (click)="setTab('dynamic')"
+        >
+          <span class="tab-icon">⚡</span>
+          <span>Dynamic Schema Engine</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab"
+          [class.active]="activeTab() === 'catalog'"
+          (click)="setTab('catalog')"
+        >
+          <span class="tab-icon">📦</span>
+          <span>Component Catalog</span>
+        </button>
+
+        <button
+          type="button"
+          class="nav-tab"
+          [class.active]="activeTab() === 'prompt'"
+          (click)="setTab('prompt')"
+        >
+          <span class="tab-icon">📋</span>
+          <span>Master Prompt & Spec</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Showcase -->
+  <main class="app-main">
+    <div class="content-container">
+      @switch (activeTab()) {
+        @case ('registration') {
+          <app-registration-demo />
+        }
+        @case ('job') {
+          <app-job-application-demo />
+        }
+        @case ('dynamic') {
+          <app-dynamic-form-demo />
+        }
+        @case ('catalog') {
+          <app-catalog-demo />
+        }
+        @case ('prompt') {
+          <app-prompt-viewer-demo />
+        }
+      }
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-copy">
+        Angular 22+ Reusable Form Components Suite • Standalone • Signals-First • ControlValueAccessor • WCAG 2.2 AA
+      </div>
+      <div class="footer-tags">
+        <span class="footer-tag">TypeScript 6</span>
+        <span class="footer-tag">ReactiveForms</span>
+        <span class="footer-tag">Zero CSS Framework Lock-in</span>
+      </div>
+    </div>
+  </footer>
+</div>
