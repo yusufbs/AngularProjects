@@ -47,6 +47,9 @@ Every component generated under this prompt must strictly adhere to Angular 22 S
 5. **Zero External CSS Framework Dependencies**:
    - 100% scoped CSS powered by CSS Custom Properties (`--ui-form-primary`, `--ui-form-border`, `--ui-form-error`, etc.).
    - Built-in Dark Mode support via `[data-theme="dark"]`.
+6. **Clean Multi-File Separation of Concerns**:
+   - Every component separates template and styling into dedicated files (`.component.html` and `.component.css`) using `templateUrl` and `styleUrl`.
+   - Zero inline templates or inline style arrays in component decorators.
 
 ---
 

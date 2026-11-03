@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ui-switch-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ui-switch-label-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ui-switch-label-wrap.label-left {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.ui-switch-track-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ui-native-switch {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.ui-custom-switch {
+  width: 2.5rem;
+  height: 1.375rem;
+  border-radius: 9999px;
+  background-color: var(--ui-form-border, #d1d5db);
+  position: relative;
+  transition: background-color 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ui-native-switch:focus-visible ~ .ui-custom-switch {
+  box-shadow: 0 0 0 3px var(--ui-form-primary-focus, rgba(79, 70, 229, 0.25));
+}
+
+.ui-custom-switch.is-checked {
+  background-color: var(--ui-form-primary, #4f46e5);
+}
+
+.ui-switch-thumb {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ui-switch-thumb.is-checked {
+  transform: translateX(1.125rem);
+}
+
+.ui-switch-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.ui-switch-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ui-form-text, #111827);
+  line-height: 1.35;
+}
+
+.ui-switch-required {
+  color: var(--ui-form-error, #ef4444);
+  margin-left: 0.125rem;
+}
+
+.ui-switch-desc {
+  font-size: 0.775rem;
+  color: var(--ui-form-text-muted, #6b7280);
+  line-height: 1.35;
+}
+
+.ui-switch-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ui-form-error-text, #b91c1c);
+  font-size: 0.775rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+.ui-error-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--ui-form-error, #ef4444);
+}
+
+.ui-switch-hint {
+  font-size: 0.775rem;
+  color: var(--ui-form-text-muted, #6b7280);
+  margin-top: 0.25rem;
+}
+
+.is-disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

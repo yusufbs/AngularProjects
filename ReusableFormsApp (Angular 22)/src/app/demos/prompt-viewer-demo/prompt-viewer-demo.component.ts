@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+﻿import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 const MASTER_PROMPT_CONTENT = `# Master Prompt: Production-Grade Reusable Form Component Suite (Angular 22+ Signal Forms)
@@ -29,8 +29,10 @@ const MASTER_PROMPT_CONTENT = `# Master Prompt: Production-Grade Reusable Form C
    - \`aria-invalid\` bound directly to \`field().invalid() && (field().touched() || field().dirty())\`.
    - Full keyboard navigation (Arrow keys for radio groups and custom dropdowns, Space/Enter for switches and file dropzones).
 5. **Zero External CSS Framework**:
-   - 100% scoped CSS variables (\`--ui-form-primary\`, \`--ui-form-border\`, \`--ui-form-error\`, etc.) with built-in Dark Mode.
-
+   - 100% scoped CSS variables (\--ui-form-primary\, \--ui-form-border\, \--ui-form-error\, etc.) with built-in Dark Mode.
+6. **Clean Multi-File Separation of Concerns**:
+   - Every component separates template and styling into dedicated files (\.component.html\ and \.component.css\) using \	emplateUrl\ and \styleUrl\.
+   - Zero inline templates or inline style arrays in component decorators.
 ---
 
 ## 2. Component Specifications
@@ -53,127 +55,8 @@ const MASTER_PROMPT_CONTENT = `# Master Prompt: Production-Grade Reusable Form C
   standalone: true,
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="prompt-viewer-card">
-      <div class="viewer-header">
-        <div>
-          <div class="tag-row">
-            <span class="signal-badge">? Angular 22 Signal Forms Specification</span>
-          </div>
-          <h2 class="viewer-title">Master Prompt & Architectural Spec</h2>
-          <p class="viewer-desc">
-            This is the exact prompt engineered to generate this reusable form library in any Angular 22+ codebase using <code>@angular/forms/signals</code>.
-          </p>
-        </div>
-        <button
-          type="button"
-          class="copy-btn"
-          [class.copied]="copied()"
-          (click)="copyPrompt()"
-        >
-          @if (copied()) {
-            <span>Copied to Clipboard! ?</span>
-          } @else {
-            <span>Copy Full Prompt ??</span>
-          }
-        </button>
-      </div>
-
-      <div class="prompt-content-box">
-        <pre class="prompt-text"><code>{{ promptText }}</code></pre>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .prompt-viewer-card {
-      background: var(--ui-form-bg, #ffffff);
-      border: 1px solid var(--ui-form-border, #e5e7eb);
-      border-radius: var(--ui-form-radius-lg, 12px);
-      padding: 1.75rem;
-      box-shadow: var(--ui-form-shadow-sm, 0 1px 3px rgba(0,0,0,0.05));
-    }
-
-    .viewer-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--ui-form-border, #f3f4f6);
-    }
-
-    .tag-row {
-      margin-bottom: 0.35rem;
-    }
-
-    .signal-badge {
-      font-size: 0.725rem;
-      font-weight: 700;
-      color: #4f46e5;
-      background: rgba(79, 70, 229, 0.1);
-      border: 1px solid rgba(79, 70, 229, 0.2);
-      padding: 0.2rem 0.5rem;
-      border-radius: 9999px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .viewer-title {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--ui-form-text, #111827);
-    }
-
-    .viewer-desc {
-      margin: 0.35rem 0 0 0;
-      font-size: 0.875rem;
-      color: var(--ui-form-text-muted, #6b7280);
-    }
-
-    .copy-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--ui-form-primary, #4f46e5);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--ui-form-radius, 8px);
-      padding: 0.625rem 1.25rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .copy-btn:hover {
-      background: var(--ui-form-primary-hover, #4338ca);
-    }
-
-    .copy-btn.copied {
-      background: var(--ui-form-success, #10b981);
-    }
-
-    .prompt-content-box {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: var(--ui-form-radius, 8px);
-      padding: 1.25rem;
-      max-height: 38rem;
-      overflow-y: auto;
-    }
-
-    .prompt-text {
-      margin: 0;
-      color: #e2e8f0;
-      font-family: var(--font-mono, monospace);
-      font-size: 0.825rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-  `],
+  templateUrl: './prompt-viewer-demo.component.html',
+  styleUrl: './prompt-viewer-demo.component.css',
 })
 export class PromptViewerDemoComponent {
   promptText = MASTER_PROMPT_CONTENT;

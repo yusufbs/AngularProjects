@@ -1,0 +1,114 @@
+<div class="ui-select-field" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  @if (label()) {
+    <div class="ui-select-header">
+      <label [for]="selectId()" class="ui-select-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-select-required" aria-hidden="true">*</span>
+        }
+      </label>
+      @if (optional()) {
+        <span class="ui-select-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div class="ui-select-container">
+    <!-- Trigger Button -->
+    <button
+      type="button"
+      [id]="selectId()"
+      class="ui-select-trigger"
+      [class.is-open]="isOpen()"
+      [class.has-value]="hasSelectedValue()"
+      [disabled]="isDisabled()"
+      (click)="toggleOpen()"
+      (keydown)="handleTriggerKeydown($event)"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-haspopup]="'listbox'"
+      [attr.aria-describedby]="describedBy()"
+    >
+      <span class="ui-select-value-text">
+        @if (selectedOption()) {
+          {{ selectedOption()?.label }}
+        } @else {
+          <span class="ui-select-placeholder">{{ placeholder() }}</span>
+        }
+      </span>
+
+      <div class="ui-select-affixes">
+        @if (clearable() && hasSelectedValue() && !isDisabled()) {
+          <span
+            class="ui-select-clear"
+            (click)="clearSelection($event)"
+            aria-label="Clear selection"
+          >
+            &times;
+          </span>
+        }
+        <svg class="ui-select-arrow" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </div>
+    </button>
+
+    <!-- Dropdown Popover -->
+    @if (isOpen()) {
+      <div class="ui-select-dropdown" role="listbox">
+        @if (searchable()) {
+          <div class="ui-select-search-wrap">
+            <input
+              type="text"
+              class="ui-select-search-input"
+              placeholder="Search options..."
+              [value]="searchQuery()"
+              (input)="handleSearchInput($event)"
+              (click)="$event.stopPropagation()"
+            />
+          </div>
+        }
+
+        <div class="ui-select-options-list">
+          @if (filteredOptions().length === 0) {
+            <div class="ui-select-empty">No options found.</div>
+          } @else {
+            @for (opt of filteredOptions(); track opt.value; let idx = $index) {
+              <div
+                class="ui-select-option"
+                [class.is-selected]="isSelected(opt.value)"
+                [class.is-disabled]="opt.disabled"
+                [class.is-highlighted]="highlightedIndex() === idx"
+                (click)="selectOption(opt, $event)"
+                (mouseenter)="highlightedIndex.set(idx)"
+                role="option"
+                [attr.aria-selected]="isSelected(opt.value)"
+              >
+                <span>{{ opt.label }}</span>
+                @if (isSelected(opt.value)) {
+                  <svg class="ui-select-check" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                }
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="ui-select-footer">
+    @if (isInvalid() && errorMessage()) {
+      <div [id]="errorId()" class="ui-select-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-select-hint">
+        {{ hint() }}
+      </div>
+    }
+  </div>
+</div>

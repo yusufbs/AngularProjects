@@ -1,0 +1,54 @@
+<div class="ui-checkbox-field" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  <label [for]="checkboxId()" class="ui-checkbox-label-wrap">
+    <div class="ui-checkbox-box-container">
+      <input
+        type="checkbox"
+        [id]="checkboxId()"
+        [checked]="checked()"
+        [disabled]="isDisabled()"
+        [indeterminate]="indeterminate()"
+        [attr.aria-invalid]="isInvalid()"
+        [attr.aria-describedby]="describedBy()"
+        (change)="handleChange($event)"
+        (blur)="handleBlur()"
+        class="ui-native-checkbox"
+      />
+      <div class="ui-custom-checkbox" [class.is-checked]="checked()" [class.is-indeterminate]="indeterminate()">
+        @if (indeterminate()) {
+          <!-- Horizontal Dash Icon -->
+          <svg viewBox="0 0 20 20" fill="currentColor" class="ui-check-icon">
+            <rect x="4" y="9" width="12" height="2" rx="1" />
+          </svg>
+        } @else if (checked()) {
+          <!-- Checkmark Icon -->
+          <svg viewBox="0 0 20 20" fill="currentColor" class="ui-check-icon">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+        }
+      </div>
+    </div>
+
+    <div class="ui-checkbox-content">
+      <span class="ui-checkbox-title">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-checkbox-required" aria-hidden="true">*</span>
+        }
+      </span>
+      @if (description()) {
+        <span class="ui-checkbox-desc">{{ description() }}</span>
+      }
+    </div>
+  </label>
+
+  @if (isInvalid() && errorMessage()) {
+    <div [id]="errorId()" class="ui-checkbox-error" role="alert">
+      <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  } @else if (hint()) {
+    <div [id]="hintId()" class="ui-checkbox-hint">{{ hint() }}</div>
+  }
+</div>

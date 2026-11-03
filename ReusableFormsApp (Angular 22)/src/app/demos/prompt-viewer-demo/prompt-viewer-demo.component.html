@@ -1,0 +1,29 @@
+﻿    <div class="prompt-viewer-card">
+      <div class="viewer-header">
+        <div>
+          <div class="tag-row">
+            <span class="signal-badge">? Angular 22 Signal Forms Specification</span>
+          </div>
+          <h2 class="viewer-title">Master Prompt & Architectural Spec</h2>
+          <p class="viewer-desc">
+            This is the exact prompt engineered to generate this reusable form library in any Angular 22+ codebase using <code>@angular/forms/signals</code>.
+          </p>
+        </div>
+        <button
+          type="button"
+          class="copy-btn"
+          [class.copied]="copied()"
+          (click)="copyPrompt()"
+        >
+          @if (copied()) {
+            <span>Copied to Clipboard! ?</span>
+          } @else {
+            <span>Copy Full Prompt ??</span>
+          }
+        </button>
+      </div>
+
+      <div class="prompt-content-box">
+        <pre class="prompt-text"><code>{{ promptText }}</code></pre>
+      </div>
+    </div>

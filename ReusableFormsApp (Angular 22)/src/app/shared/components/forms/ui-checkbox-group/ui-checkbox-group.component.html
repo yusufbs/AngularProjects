@@ -1,0 +1,63 @@
+<div class="ui-checkbox-group" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  @if (label()) {
+    <div class="ui-group-header">
+      <span class="ui-group-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-group-required" aria-hidden="true">*</span>
+        }
+      </span>
+      @if (optional()) {
+        <span class="ui-group-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div
+    class="ui-options-container"
+    [class.is-horizontal]="orientation() === 'horizontal'"
+    role="group"
+    [attr.aria-describedby]="describedBy()"
+  >
+    @for (opt of options(); track opt.value; let idx = $index) {
+      <label class="ui-group-item" [class.is-checked]="isChecked(opt.value)" [class.is-disabled]="opt.disabled || isDisabled()">
+        <input
+          type="checkbox"
+          [name]="groupId()"
+          [value]="opt.value"
+          [checked]="isChecked(opt.value)"
+          [disabled]="opt.disabled || isDisabled()"
+          (change)="toggleOption(opt.value)"
+          (blur)="handleBlur()"
+          class="ui-native-box"
+        />
+        <div class="ui-custom-box" [class.is-checked]="isChecked(opt.value)">
+          @if (isChecked(opt.value)) {
+            <svg viewBox="0 0 20 20" fill="currentColor" class="ui-check-icon">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          }
+        </div>
+        <div class="ui-item-text">
+          <span class="ui-item-label">{{ opt.label }}</span>
+          @if (opt.description) {
+            <span class="ui-item-desc">{{ opt.description }}</span>
+          }
+        </div>
+      </label>
+    }
+  </div>
+
+  <div class="ui-group-footer">
+    @if (isInvalid() && errorMessage()) {
+      <div [id]="errorId()" class="ui-group-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-group-hint">{{ hint() }}</div>
+    }
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="ui-upload-field" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  @if (label()) {
+    <div class="ui-upload-header">
+      <span class="ui-upload-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-upload-required" aria-hidden="true">*</span>
+        }
+      </span>
+      @if (optional()) {
+        <span class="ui-upload-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div
+    class="ui-dropzone"
+    [class.is-dragover]="isDragOver()"
+    (dragover)="handleDragOver($event)"
+    (dragleave)="handleDragLeave($event)"
+    (drop)="handleDrop($event)"
+    (click)="triggerFileInput()"
+    role="button"
+    tabindex="0"
+    (keydown.enter)="triggerFileInput()"
+    (keydown.space)="triggerFileInput()"
+  >
+    <input
+      #fileInput
+      type="file"
+      [id]="uploadId()"
+      [accept]="accept()"
+      [multiple]="multiple()"
+      [disabled]="isDisabled()"
+      (change)="handleFileSelect($event)"
+      class="ui-hidden-file-input"
+    />
+
+    <div class="ui-dropzone-content">
+      <div class="ui-upload-icon-circle">
+        <svg class="ui-upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+      </div>
+      <div class="ui-dropzone-text">
+        <span class="ui-dropzone-primary">Click to upload</span> or drag and drop
+      </div>
+      <div class="ui-dropzone-hint">
+        {{ accept() !== '*' ? accept() : 'Any file' }} up to {{ formattedMaxSize() }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected Files List -->
+  @if (files().length > 0) {
+    <div class="ui-files-list">
+      @for (f of files(); track f.name; let idx = $index) {
+        <div class="ui-file-chip">
+          <svg class="ui-file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          <div class="ui-file-info">
+            <span class="ui-file-name" [title]="f.name">{{ f.name }}</span>
+            <span class="ui-file-size">{{ formatBytes(f.size) }}</span>
+          </div>
+          @if (!isDisabled()) {
+            <button
+              type="button"
+              class="ui-file-remove-btn"
+              (click)="removeFile(idx, $event)"
+              aria-label="Remove file"
+            >
+              &times;
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="ui-upload-footer">
+    @if (isInvalid() && errorMessage()) {
+      <div [id]="errorId()" class="ui-upload-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-upload-hint">{{ hint() }}</div>
+    }
+  </div>
+</div>

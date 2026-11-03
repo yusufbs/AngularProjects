@@ -1,0 +1,67 @@
+<div class="ui-radio-group" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  @if (label()) {
+    <div class="ui-group-header">
+      <span class="ui-group-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-group-required" aria-hidden="true">*</span>
+        }
+      </span>
+      @if (optional()) {
+        <span class="ui-group-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div
+    class="ui-radio-list"
+    [class.is-horizontal]="orientation() === 'horizontal'"
+    [class.is-card-style]="cardStyle()"
+    role="radiogroup"
+    [attr.aria-describedby]="describedBy()"
+  >
+    @for (opt of options(); track opt.value; let idx = $index) {
+      <label
+        class="ui-radio-item"
+        [class.is-selected]="value() === opt.value"
+        [class.is-disabled]="opt.disabled || isDisabled()"
+        [class.is-card]="cardStyle()"
+      >
+        <input
+          type="radio"
+          [name]="groupId()"
+          [value]="opt.value"
+          [checked]="value() === opt.value"
+          [disabled]="opt.disabled || isDisabled()"
+          (change)="selectOption(opt.value)"
+          (blur)="handleBlur()"
+          class="ui-native-radio"
+        />
+        
+        <div class="ui-custom-radio" [class.is-checked]="value() === opt.value">
+          <span class="ui-radio-inner-dot"></span>
+        </div>
+
+        <div class="ui-radio-content">
+          <span class="ui-radio-label">{{ opt.label }}</span>
+          @if (opt.description) {
+            <span class="ui-radio-desc">{{ opt.description }}</span>
+          }
+        </div>
+      </label>
+    }
+  </div>
+
+  <div class="ui-group-footer">
+    @if (isInvalid() && errorMessage()) {
+      <div [id]="errorId()" class="ui-group-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-group-hint">{{ hint() }}</div>
+    }
+  </div>
+</div>

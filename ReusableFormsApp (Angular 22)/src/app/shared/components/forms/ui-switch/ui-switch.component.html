@@ -1,0 +1,51 @@
+<div class="ui-switch-field" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  <label
+    [for]="switchId()"
+    class="ui-switch-label-wrap"
+    [class.label-left]="labelPosition() === 'left'"
+  >
+    <div class="ui-switch-track-container">
+      <input
+        type="checkbox"
+        role="switch"
+        [id]="switchId()"
+        [checked]="checked()"
+        [disabled]="isDisabled()"
+        [attr.aria-checked]="checked()"
+        [attr.aria-invalid]="isInvalid()"
+        [attr.aria-describedby]="describedBy()"
+        (change)="handleChange($event)"
+        (blur)="handleBlur()"
+        class="ui-native-switch"
+      />
+      <div class="ui-custom-switch" [class.is-checked]="checked()">
+        <span class="ui-switch-thumb" [class.is-checked]="checked()"></span>
+      </div>
+    </div>
+
+    @if (label()) {
+      <div class="ui-switch-content">
+        <span class="ui-switch-title">
+          {{ label() }}
+          @if (required()) {
+            <span class="ui-switch-required" aria-hidden="true">*</span>
+          }
+        </span>
+        @if (description()) {
+          <span class="ui-switch-desc">{{ description() }}</span>
+        }
+      </div>
+    }
+  </label>
+
+  @if (isInvalid() && errorMessage()) {
+    <div [id]="errorId()" class="ui-switch-error" role="alert">
+      <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  } @else if (hint()) {
+    <div [id]="hintId()" class="ui-switch-hint">{{ hint() }}</div>
+  }
+</div>

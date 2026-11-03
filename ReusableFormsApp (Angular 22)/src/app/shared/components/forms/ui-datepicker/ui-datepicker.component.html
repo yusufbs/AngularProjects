@@ -1,0 +1,55 @@
+<div class="ui-date-field" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  @if (label()) {
+    <div class="ui-date-header">
+      <label [for]="dateId()" class="ui-date-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-date-required" aria-hidden="true">*</span>
+        }
+      </label>
+      @if (optional()) {
+        <span class="ui-date-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div class="ui-date-box" [class.is-focused]="isFocused()">
+    <input
+      type="date"
+      [id]="dateId()"
+      [value]="value()"
+      [min]="min()"
+      [max]="max()"
+      [disabled]="isDisabled()"
+      [attr.aria-invalid]="isInvalid()"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-required]="required()"
+      (input)="handleInput($event)"
+      (blur)="handleBlur()"
+      (focus)="handleFocus()"
+      class="ui-native-date-input"
+    />
+  </div>
+
+  @if (quickPresets() && !isDisabled()) {
+    <div class="ui-date-presets">
+      <button type="button" class="ui-preset-btn" (click)="setPresetDays(0)">Today</button>
+      <button type="button" class="ui-preset-btn" (click)="setPresetDays(1)">Tomorrow</button>
+      <button type="button" class="ui-preset-btn" (click)="setPresetDays(7)">+7 Days</button>
+      <button type="button" class="ui-preset-btn" (click)="setPresetDays(30)">+30 Days</button>
+    </div>
+  }
+
+  <div class="ui-date-footer">
+    @if (isInvalid() && errorMessage()) {
+      <div [id]="errorId()" class="ui-date-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-date-hint">{{ hint() }}</div>
+    }
+  </div>
+</div>

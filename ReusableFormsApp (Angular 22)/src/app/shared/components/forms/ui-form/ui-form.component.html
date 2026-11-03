@@ -1,0 +1,56 @@
+<form
+  (submit)="handleSubmit($event)"
+  class="ui-form"
+  [class.layout-stacked]="layout() === 'stacked'"
+  [class.layout-grid-2]="layout() === 'grid-2'"
+  [class.layout-grid-3]="layout() === 'grid-3'"
+  novalidate
+>
+  @if (showErrorSummary() && submitted() && hasErrors()) {
+    <div class="ui-form-summary" role="alert" aria-live="polite">
+      <div class="ui-summary-header">
+        <svg class="ui-summary-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        <span class="ui-summary-title">Please correct the errors in the form before submitting:</span>
+      </div>
+      <ul class="ui-summary-list">
+        @for (err of errorSummaryList(); track err.label) {
+          <li>{{ err.message }}</li>
+        }
+      </ul>
+    </div>
+  }
+
+  <div class="ui-form-body">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="ui-form-actions">
+    <ng-content select="[actions]">
+      <div class="ui-default-actions">
+        @if (showReset()) {
+          <button
+            type="button"
+            class="ui-btn ui-btn-secondary"
+            [disabled]="loading()"
+            (click)="handleReset()"
+          >
+            {{ resetText() }}
+          </button>
+        }
+        <button
+          type="submit"
+          class="ui-btn ui-btn-primary"
+          [disabled]="loading()"
+          [class.is-loading]="loading()"
+        >
+          @if (loading()) {
+            <span class="ui-spinner" aria-hidden="true"></span>
+          }
+          <span>{{ submitText() }}</span>
+        </button>
+      </div>
+    </ng-content>
+  </div>
+</form>

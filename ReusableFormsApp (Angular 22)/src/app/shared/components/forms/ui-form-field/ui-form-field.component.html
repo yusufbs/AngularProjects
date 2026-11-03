@@ -1,0 +1,46 @@
+<div class="ui-field" [class.has-error]="hasError()" [class.is-disabled]="disabled()">
+  @if (label()) {
+    <div class="ui-field-header">
+      <label [for]="fieldId()" class="ui-field-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-field-required" aria-hidden="true">*</span>
+        }
+      </label>
+      @if (optional()) {
+        <span class="ui-field-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div class="ui-field-control-wrap">
+    <ng-content select="[prefix]"></ng-content>
+    <div class="ui-field-input-host">
+      <ng-content></ng-content>
+    </div>
+    <ng-content select="[suffix]"></ng-content>
+  </div>
+
+  <div class="ui-field-footer">
+    @if (hasError()) {
+      <div [id]="errorId()" class="ui-field-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ displayError() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-field-hint">
+        {{ hint() }}
+      </div>
+    } @else {
+      <div></div>
+    }
+
+    @if (maxlength()) {
+      <span class="ui-field-count" [class.at-limit]="currentLength() >= maxlength()!">
+        {{ currentLength() }}/{{ maxlength() }}
+      </span>
+    }
+  </div>
+</div>

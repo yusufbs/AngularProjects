@@ -1,0 +1,193 @@
+﻿    <div class="demo-grid">
+      <!-- Form Column -->
+      <div class="demo-card form-panel">
+        <div class="demo-card-header">
+          <div class="badge-row">
+            <span class="signal-tag">? Angular 22 Signal Forms</span>
+          </div>
+          <h2 class="card-title">User Account & Profile Setup</h2>
+          <p class="card-subtitle">
+            Powered 100% by <strong>Signal Forms</strong> (<code>@angular/forms/signals</code>) � uses <code>form(profileModel, schema)</code>, <code>[formField]</code> directives, and zero <code>FormGroup</code> / <code>ReactiveFormsModule</code> boilerplate!
+          </p>
+        </div>
+
+        <ui-form
+          [form]="profileForm"
+          layout="grid-2"
+          submitText="Create Account (Signal Forms)"
+          [showReset]="true"
+          resetText="Clear Form"
+          [loading]="isSubmitting()"
+          (formSubmit)="onFormSubmit($event)"
+          (formReset)="onFormReset()"
+        >
+          <!-- Full Name -->
+          <ui-input
+            [formField]="profileForm.fullName"
+            label="Full Name"
+            placeholder="Jane Doe"
+            hint="Legal first and last name"
+            prefixIcon="??"
+            required
+            clearable
+          />
+
+          <!-- Email -->
+          <ui-input
+            [formField]="profileForm.email"
+            type="email"
+            label="Work Email"
+            placeholder="jane@company.com"
+            hint="Used for account verification"
+            prefixIcon="??"
+            required
+            clearable
+          />
+
+          <!-- Password -->
+          <ui-input
+            [formField]="profileForm.password"
+            type="password"
+            label="Password"
+            placeholder="At least 8 characters"
+            hint="Must include letters and numbers"
+            prefixIcon="??"
+            required
+            [showPasswordToggle]="true"
+          />
+
+          <!-- Date of Birth -->
+          <ui-datepicker
+            [formField]="profileForm.birthDate"
+            label="Date of Birth"
+            hint="Must be at least 18 years old"
+            required
+            quickPresets
+          />
+
+          <!-- Country -->
+          <ui-select
+            [formField]="profileForm.country"
+            label="Country / Region"
+            placeholder="Select your country..."
+            hint="Determines data residency compliance"
+            [options]="countryOptions"
+            required
+            searchable
+            clearable
+          />
+
+          <!-- Company Size -->
+          <ui-select
+            [formField]="profileForm.companySize"
+            label="Company Size"
+            placeholder="Select company size..."
+            [options]="companySizeOptions"
+            required
+          />
+
+          <!-- Biography (Spans full width via CSS) -->
+          <div style="grid-column: 1 / -1;">
+            <ui-textarea
+              [formField]="profileForm.bio"
+              label="Professional Summary / Bio"
+              placeholder="Brief overview of your experience and role..."
+              hint="Visible on your public team profile"
+              [rows]="3"
+              [maxlength]="200"
+              autoResize
+              optional
+            />
+          </div>
+
+          <!-- Plan Selection (Radio Cards, Spans full width) -->
+          <div style="grid-column: 1 / -1;">
+            <ui-radio-group
+              [formField]="profileForm.plan"
+              label="Select Subscription Tier"
+              hint="You can upgrade or downgrade anytime."
+              [options]="planOptions"
+              cardStyle
+              required
+            />
+          </div>
+
+          <!-- Toggles (Spans full width) -->
+          <div style="grid-column: 1 / -1;" class="toggles-wrapper">
+            <ui-switch
+              [formField]="profileForm.twoFactor"
+              label="Two-Factor Authentication (2FA)"
+              description="Require an authenticator code on sensitive administrative actions."
+            />
+
+            <ui-switch
+              [formField]="profileForm.marketingEmails"
+              label="Product Updates & Engineering Briefings"
+              description="Receive weekly summaries of new features and platform improvements."
+            />
+
+            <ui-checkbox
+              [formField]="profileForm.agreeTerms"
+              label="I agree to the Enterprise Terms of Service and Privacy Policy"
+              description="Required for account activation."
+              required
+            />
+          </div>
+        </ui-form>
+      </div>
+
+      <!-- State Inspector Column -->
+      <div class="demo-card inspector-panel">
+        <div class="demo-card-header">
+          <div class="inspector-header-top">
+            <h3 class="card-title">Live Signal State</h3>
+            <span
+              class="status-pill"
+              [class.valid]="profileForm().valid()"
+              [class.invalid]="profileForm().invalid()"
+            >
+              {{ profileForm().valid() ? 'VALID' : 'INVALID' }}
+            </span>
+          </div>
+          <p class="card-subtitle">Real-time inspection of <code>FieldTree</code> signal reactivity.</p>
+        </div>
+
+        <div class="inspector-stats">
+          <div class="stat-box">
+            <span class="stat-label">Touched</span>
+            <span class="stat-value" [class.true-val]="profileForm().touched()">
+              {{ profileForm().touched() }}
+            </span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Dirty</span>
+            <span class="stat-value" [class.true-val]="profileForm().dirty()">
+              {{ profileForm().dirty() }}
+            </span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Errors</span>
+            <span class="stat-value" [class.true-val]="profileForm().errors().length > 0">
+              {{ profileForm().errors().length }}
+            </span>
+          </div>
+        </div>
+
+        @if (submittedPayload()) {
+          <div class="success-banner" role="status">
+            <div class="success-title">
+              <svg class="success-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span>Successfully Submitted with Signal Forms!</span>
+            </div>
+            <p class="success-desc">Validated via <code>submit(profileForm, ...)</code> and returned typed signal data.</p>
+          </div>
+        }
+
+        <div class="json-viewer-header">
+          <span>Underlying Model Signal (JSON)</span>
+        </div>
+        <pre class="json-code"><code>{{ profileModel() | json }}</code></pre>
+      </div>
+    </div>

@@ -1,0 +1,58 @@
+<div class="ui-textarea-field" [class.has-error]="isInvalid()" [class.is-disabled]="isDisabled()">
+  @if (label()) {
+    <div class="ui-textarea-header">
+      <label [for]="textareaId()" class="ui-textarea-label">
+        {{ label() }}
+        @if (required()) {
+          <span class="ui-textarea-required" aria-hidden="true">*</span>
+        }
+      </label>
+      @if (optional()) {
+        <span class="ui-textarea-optional">Optional</span>
+      }
+    </div>
+  }
+
+  <div class="ui-textarea-box" [class.is-focused]="isFocused()">
+    <textarea
+      #textareaEl
+      [id]="textareaId()"
+      [value]="value()"
+      [placeholder]="placeholder()"
+      [rows]="rows()"
+      [disabled]="isDisabled()"
+      [readonly]="readonly()"
+      [attr.maxlength]="maxlength()"
+      [attr.aria-invalid]="isInvalid()"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-required]="required()"
+      (input)="handleInput($event)"
+      (blur)="handleBlur()"
+      (focus)="handleFocus()"
+      class="ui-native-textarea"
+    ></textarea>
+  </div>
+
+  <div class="ui-textarea-footer">
+    @if (isInvalid() && errorMessage()) {
+      <div [id]="errorId()" class="ui-textarea-error" role="alert">
+        <svg class="ui-error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    } @else if (hint()) {
+      <div [id]="hintId()" class="ui-textarea-hint">
+        {{ hint() }}
+      </div>
+    } @else {
+      <div></div>
+    }
+
+    @if (maxlength()) {
+      <span class="ui-char-count">
+        {{ charCount() }}/{{ maxlength() }}
+      </span>
+    }
+  </div>
+</div>

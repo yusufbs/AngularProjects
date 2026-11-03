@@ -1,0 +1,159 @@
+@if (formTree()) {
+  <div class="ui-dynamic-form-wrap">
+    @if (schema().title || schema().description) {
+      <div class="ui-dynamic-header">
+        @if (schema().title) {
+          <h3 class="ui-dynamic-title">{{ schema().title }}</h3>
+        }
+        @if (schema().description) {
+          <p class="ui-dynamic-desc">{{ schema().description }}</p>
+        }
+      </div>
+    }
+
+    <ui-form
+      [form]="formTree()!"
+      [submitText]="schema().submitText || 'Submit'"
+      [showReset]="schema().showReset ?? true"
+      [resetText]="schema().resetText || 'Reset'"
+      [layout]="schema().layout || 'stacked'"
+      (formSubmit)="formSubmit.emit($event)"
+      (formReset)="formReset.emit()"
+    >
+      <div class="ui-dynamic-fields-grid" [class.is-grid-2]="schema().layout === 'grid-2'">
+        @for (field of schema().fields; track field.name) {
+          @if (isFieldVisible(field)) {
+            <div
+              class="ui-dynamic-field-col"
+              [style.grid-column]="field.gridCols ? 'span ' + field.gridCols : 'span 1'"
+            >
+              @switch (field.type) {
+                @case ('text') {
+                  <ui-input
+                    [formField]="asField(field.name)"
+                    type="text"
+                    [label]="field.label"
+                    [placeholder]="field.placeholder || ''"
+                    [hint]="field.hint || ''"
+                    [required]="!!field.validators?.required"
+                    [clearable]="field.clearable ?? false"
+                  />
+                }
+                @case ('email') {
+                  <ui-input
+                    [formField]="asField(field.name)"
+                    type="email"
+                    [label]="field.label"
+                    [placeholder]="field.placeholder || ''"
+                    [hint]="field.hint || ''"
+                    [required]="!!field.validators?.required"
+                    [clearable]="field.clearable ?? false"
+                  />
+                }
+                @case ('password') {
+                  <ui-input
+                    [formField]="asField(field.name)"
+                    type="password"
+                    [label]="field.label"
+                    [placeholder]="field.placeholder || ''"
+                    [hint]="field.hint || ''"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('number') {
+                  <ui-input
+                    [formField]="asField(field.name)"
+                    type="number"
+                    [label]="field.label"
+                    [placeholder]="field.placeholder || ''"
+                    [hint]="field.hint || ''"
+                    [min]="field.validators?.min ?? null"
+                    [max]="field.validators?.max ?? null"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('textarea') {
+                  <ui-textarea
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [placeholder]="field.placeholder || ''"
+                    [hint]="field.hint || ''"
+                    [rows]="field.rows || 4"
+                    [maxlength]="field.validators?.maxLength ?? null"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('select') {
+                  <ui-select
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [placeholder]="field.placeholder || 'Select an option...'"
+                    [hint]="field.hint || ''"
+                    [options]="asSelectOptions(field.options)"
+                    [required]="!!field.validators?.required"
+                    searchable
+                    clearable
+                  />
+                }
+                @case ('checkbox') {
+                  <ui-checkbox
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [description]="field.placeholder || ''"
+                    [hint]="field.hint || ''"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('checkbox-group') {
+                  <ui-checkbox-group
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [hint]="field.hint || ''"
+                    [options]="asCheckboxOptions(field.options)"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('radio') {
+                  <ui-radio-group
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [hint]="field.hint || ''"
+                    [options]="asRadioOptions(field.options)"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('switch') {
+                  <ui-switch
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [description]="field.hint || ''"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+                @case ('date') {
+                  <ui-datepicker
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [hint]="field.hint || ''"
+                    [required]="!!field.validators?.required"
+                    quickPresets
+                  />
+                }
+                @case ('file') {
+                  <ui-file-upload
+                    [formField]="asField(field.name)"
+                    [label]="field.label"
+                    [hint]="field.hint || ''"
+                    [accept]="field.accept || '*'"
+                    [multiple]="field.multiple ?? false"
+                    [required]="!!field.validators?.required"
+                  />
+                }
+              }
+            </div>
+          }
+        }
+      </div>
+    </ui-form>
+  </div>
+}
