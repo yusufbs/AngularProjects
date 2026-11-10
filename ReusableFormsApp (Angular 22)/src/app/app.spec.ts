@@ -20,6 +20,13 @@ describe('App', () => {
     expect(app.activeTab()).toBe('registration');
   });
 
+  it('should switch to dynamic schema tab', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    app.setTab('dynamic');
+    expect(app.activeTab()).toBe('dynamic');
+  });
+
   it('should toggle theme mode', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
@@ -27,4 +34,5 @@ describe('App', () => {
     app.toggleTheme();
     expect(app.isDarkMode()).toBe(true);
   });
+});
 });

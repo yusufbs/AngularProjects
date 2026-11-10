@@ -5,6 +5,9 @@ import {
   output,
   signal,
   computed,
+  inject,
+  Injector,
+  runInInjectionContext,
   OnInit,
   OnChanges,
   SimpleChanges,
@@ -62,6 +65,8 @@ import {
   styleUrl: './ui-dynamic-form.component.css',
 })
 export class UiDynamicFormComponent implements OnInit, OnChanges {
+  private injector = inject(Injector);
+
   schema = input.required<DynamicFormSchema>();
   formSubmit = output<any>();
   formReset = output<void>();
@@ -100,42 +105,44 @@ export class UiDynamicFormComponent implements OnInit, OnChanges {
 
     this.modelSignal.set(initialModel);
 
-    // Build Signal Forms FieldTree with schema rules!
-    const dynamicTree = form(this.modelSignal, (schemaBuilder: any) => {
-      s.fields.forEach((field) => {
-        const fieldRef = schemaBuilder[field.name];
-        if (!fieldRef) return;
+    // Build Signal Forms FieldTree with schema rules inside injection context!
+    runInInjectionContext(this.injector, () => {
+      const dynamicTree = form(this.modelSignal, (schemaBuilder: any) => {
+        s.fields.forEach((field) => {
+          const fieldRef = schemaBuilder[field.name];
+          if (!fieldRef) return;
 
-        const v = field.validators;
-        if (v) {
-          if (v.required) {
-            required(fieldRef, { message: `${field.label} is required.` });
+          const v = field.validators;
+          if (v) {
+            if (v.required) {
+              required(fieldRef, { message: `${field.label} is required.` });
+            }
+            if (v.email || field.type === 'email') {
+              email(fieldRef, { message: 'Must be a valid email.' });
+            }
+            if (v.min !== undefined) {
+              min(fieldRef, v.min, { message: `Minimum value is ${v.min}.` });
+            }
+            if (v.max !== undefined) {
+              max(fieldRef, v.max, { message: `Maximum value is ${v.max}.` });
+            }
+            if (v.minLength !== undefined) {
+              minLength(fieldRef, v.minLength, { message: `At least ${v.minLength} characters.` });
+            }
+            if (v.maxLength !== undefined) {
+              maxLength(fieldRef, v.maxLength, { message: `At most ${v.maxLength} characters.` });
+            }
+            if (v.pattern) {
+              pattern(fieldRef, typeof v.pattern === 'string' ? new RegExp(v.pattern) : v.pattern, {
+                message: 'Invalid format.',
+              });
+            }
           }
-          if (v.email || field.type === 'email') {
-            email(fieldRef, { message: 'Must be a valid email.' });
-          }
-          if (v.min !== undefined) {
-            min(fieldRef, v.min, { message: `Minimum value is ${v.min}.` });
-          }
-          if (v.max !== undefined) {
-            max(fieldRef, v.max, { message: `Maximum value is ${v.max}.` });
-          }
-          if (v.minLength !== undefined) {
-            minLength(fieldRef, v.minLength, { message: `At least ${v.minLength} characters.` });
-          }
-          if (v.maxLength !== undefined) {
-            maxLength(fieldRef, v.maxLength, { message: `At most ${v.maxLength} characters.` });
-          }
-          if (v.pattern) {
-            pattern(fieldRef, typeof v.pattern === 'string' ? new RegExp(v.pattern) : v.pattern, {
-              message: 'Invalid format.',
-            });
-          }
-        }
+        });
       });
-    });
 
-    this.formTree.set(dynamicTree);
+      this.formTree.set(dynamicTree);
+    });
   }
 
   asField(fieldName: string): any {
